@@ -112,23 +112,16 @@ public class Game
 
 
     public GameNode node(Position p){
+        checkIfPositionIsCorrect(p);
 
-        if (positionIsIncorrect(p)){
-            throw new IndexOutOfBoundsException("Position out of bounds: " + p);
-        }
         int row = p.getRow() - 1;
         int col = p.getCol() - 1;
         return Board[row][col];
     }
-    public GameNode createBulbNode(Position p, Side side){
-        if (positionIsIncorrect(p)){
-            return null;
-        }
+    public void createBulbNode(Position p, Side side){
+        checkIfPositionIsCorrect(p);
+        checkIfNodeIsEmpty(p);
 
-        GameNode existing = node(p);
-        if (existing.nodeType != Empty) {
-            return null;
-        }
         BulbNodeAlreadyPlaced = true;
 
         GameNode node =  new GameNode();
@@ -138,17 +131,13 @@ public class Game
 //        node.addObserver(this);
 
         Board[p.getRow()-1][p.getCol()-1] = node;
-        return node;
     }
 
-    public GameNode createPowerNode(Position p, Side... sides){
-        if (positionIsIncorrect(p) || PowerNodeAlreadyPlaced || sides.length == 0){
-            return null;
-        }
-
-        GameNode existing = node(p);
-        if (existing.nodeType != Empty) {
-            return null;
+    public void createPowerNode(Position p, Side... sides){
+        checkIfPositionIsCorrect(p);
+        checkIfNodeIsEmpty(p);
+        if (PowerNodeAlreadyPlaced || sides.length == 0){
+            throw new RuntimeException("Power node has already been placed or it has too many sides (only one side allowed)");
         }
 
         PowerNodeAlreadyPlaced = true;
@@ -160,17 +149,13 @@ public class Game
 
         Board[p.getRow()-1][p.getCol()-1] = node;
         PowerNodePosition = p;
-        return node;
     }
 
-    public GameNode createLinkNode(Position p, Side... sides){
-        if (positionIsIncorrect(p) || sides.length < 2 || sides.length > 4){
-            return null;
-        }
-
-        GameNode existing = node(p);
-        if (existing.nodeType != Empty) {
-            return null;
+    public void createLinkNode(Position p, Side... sides){
+        checkIfPositionIsCorrect(p);
+        checkIfNodeIsEmpty(p);
+        if (sides.length < 2 || sides.length > 4){
+           throw new RuntimeException("Link node must have between 2 and 4 sides");
         }
 
         GameNode node =  new GameNode();
@@ -180,14 +165,20 @@ public class Game
 //        node.addObserver(this);
 
         Board[p.getRow()-1][p.getCol()-1] = node;
-        return node;
     }
 
-    private boolean positionIsIncorrect(Position p){
+    private void checkIfPositionIsCorrect(Position p){
         if(p.getRow() < 1 || p.getRow() > RowSize || p.getCol() < 1 || p.getCol() > ColSize){
-            return true;
+            throw new IndexOutOfBoundsException("Position out of bounds: " + p);
         }
         return false;
+    }
+
+    private void checkIfNodeIsEmpty(Position p) {
+        GameNode existing = node(p);
+        if (existing.nodeType != Empty) {
+            throw new RuntimeException("Bulb already exists at this place");
+        }
     }
 
 //    @Override
