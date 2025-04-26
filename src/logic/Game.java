@@ -1,6 +1,7 @@
 package logic;
 
 import static logic.NodeType.Empty;
+import seeds.*;
 
 public class Game
 {
@@ -29,6 +30,54 @@ public class Game
             }
         }
         Board = board;
+    }
+
+    public void SeedBoard(Difficulty difficulty, int easyGamesPlayed, int mediumGamesPlayed, int hardGamesPlayed){
+        Object[][] seed = switch (difficulty) {
+            case easy -> SeedEasyBoard(easyGamesPlayed);
+            case medium -> SeedMediumBoard(mediumGamesPlayed);
+            case hard -> SeedHardBoard(hardGamesPlayed);
+        };
+        ApplySeed(seed);
+    }
+    private Object[][] SeedEasyBoard(int lastlyGenerated){
+        if (lastlyGenerated >= 1) {
+            return EasyGameSeeds.allSeeds[(lastlyGenerated % EasyGameSeeds.allSeeds.length)];
+        } else {
+            return EasyGameSeeds.allSeeds[0]; // default seed
+        }
+    }
+    private Object[][] SeedMediumBoard(int lastlyGenerated){
+        if (lastlyGenerated >= 1) {
+            return MediumGameSeeds.allSeeds[lastlyGenerated % MediumGameSeeds.allSeeds.length];
+        } else {
+            return MediumGameSeeds.allSeeds[0]; // default seed
+        }
+    }
+    private Object[][] SeedHardBoard(int lastlyGenerated){
+        if (lastlyGenerated >= 1) {
+            return HardGameSeeds.allSeeds[lastlyGenerated % HardGameSeeds.allSeeds.length];
+        } else {
+            return HardGameSeeds.allSeeds[0]; // default seed
+        }
+    }
+
+    private void ApplySeed(Object[][] seed){
+        for (Object[] n : seed) {
+            String type = (String) n[0];
+            int row = (Integer) n[1];
+            int col = (Integer) n[2];
+            Position p = new Position(row, col);
+            Side[] sides = new Side[n.length - 3];
+            for (int i = 3; i < n.length; i++) {
+                sides[i - 3] = (Side) n[i];
+            }
+            switch (type) {
+                case "L" -> createLinkNode(p, sides);
+                case "B" -> createBulbNode(p, sides[0]);
+                case "P" -> createPowerNode(p, sides);
+            }
+        }
     }
 
     public GameNode fieldAt(int x, int y) {
@@ -137,7 +186,7 @@ public class Game
         checkIfPositionIsCorrect(p);
         checkIfNodeIsEmpty(p);
         if (PowerNodeAlreadyPlaced || sides.length == 0){
-            throw new RuntimeException("Power node has already been placed or it has too many sides (only one side allowed)");
+            throw new RuntimeException("Power node has already been placed");
         }
 
         PowerNodeAlreadyPlaced = true;
@@ -171,7 +220,6 @@ public class Game
         if(p.getRow() < 1 || p.getRow() > RowSize || p.getCol() < 1 || p.getCol() > ColSize){
             throw new IndexOutOfBoundsException("Position out of bounds: " + p);
         }
-        return false;
     }
 
     private void checkIfNodeIsEmpty(Position p) {
