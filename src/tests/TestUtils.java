@@ -1,3 +1,5 @@
+package tests;
+
 import logic.Game;
 import logic.GameNode;
 import logic.Position;

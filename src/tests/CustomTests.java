@@ -1,4 +1,4 @@
-/*
+package tests;/*
  * Author:  Varsányi Adam, VUT FIT
  * Created: 27/04/2025
  */

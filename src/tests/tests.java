@@ -1,4 +1,4 @@
-/*
+package tests;/*
  * IJA (Seminář Java): 2024/25 Ukol 2
  * Author:  Radek Kočí, VUT FIT
  * Created: 03/2025
@@ -6,14 +6,10 @@
 
 import logic.Game;
 import logic.GameNode;
-import logic.NodeType;
 import logic.Position;
 import logic.Side;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static logic.Side.*;
 import static org.junit.jupiter.api.Assertions.*;
