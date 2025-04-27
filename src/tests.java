@@ -22,13 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Radek Koci <koci AT fit.vut.cz>
  */
-public class tests {
-    
-    /**
-     * Hra pro testování.
-     */
-    private Game game;
-
+public class tests extends TestUtils{
     /**
      * Definice obsazených políček ve hře. Použito pro vytvoření testovací hry.
      * def_field = {Type, row, col, list_of_connectors}
@@ -211,31 +205,4 @@ public class tests {
         assertEquals("{B[3@3][EAST]}", game.node(pos4).toString(), "Test spravne reprezentace stavu policka.");   
     }
 
-    /**
-     * Pomocná testovací metoda - ověří svítivost políček. 
-     * Ověří, zda zadaná políčka svítí a zda všechna ostatní políčka nesvítí.
-     * @param lights Pole souřadnic [row,col] políček, která mají svítit.
-     */
-    private void testLight(Integer[][] lights) { 
-        List<Position> allpos = new ArrayList<>();
-        for (int r = 1; r <= game.rows(); r++) {
-            for (int c = 1; c <= game.cols(); c++) {
-                allpos.add(new Position(r, c));
-            }
-        }
-
-        for (Integer[] coord : lights) {
-            int row = coord[0];
-            int col = coord[1];
-            Position pos = new Position(row, col);    
-            allpos.remove(pos);
-            GameNode node = game.node(pos);
-            assertTrue(node.light(), "Políčko " + pos + " má být pod proudem.");
-        }
-        
-        for (Position pos : allpos) {
-            GameNode node = game.node(pos);
-            assertFalse(node.light(), "Políčko " + pos + " nemá být pod proudem.");
-        }        
-    }
 }
