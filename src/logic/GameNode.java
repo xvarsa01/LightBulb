@@ -1,11 +1,12 @@
 package logic;
 
 import common.AbstractObservable;
+import logic.interfaces.IGameNode;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameNode extends AbstractObservable {
+public class GameNode extends AbstractObservable implements IGameNode {
 
     public Position position;
     public NodeType nodeType;

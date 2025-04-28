@@ -4,6 +4,7 @@ import static logic.NodeType.Empty;
 
 import common.AbstractObservable;
 import common.Observable;
+import logic.interfaces.IGame;
 import seeds.*;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Game extends AbstractObservable implements Observable.Observer
+public class Game extends AbstractObservable implements Observable.Observer, IGame
 {
 
     private final int ColSize;
