@@ -1,9 +1,9 @@
 package logic.interfaces;
 
 import common.Observable;
-import logic.Difficulty;
+import enums.Difficulty;
 import logic.Position;
-import logic.Side;
+import enums.Side;
 
 public interface IGame extends Observable
 {

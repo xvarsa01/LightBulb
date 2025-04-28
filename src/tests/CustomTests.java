@@ -3,7 +3,7 @@ package tests;/*
  * Created: 27/04/2025
  */
 
-import logic.Difficulty;
+import enums.Difficulty;
 import logic.Game;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CustomTests extends TestUtils {

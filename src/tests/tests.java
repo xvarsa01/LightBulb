@@ -7,11 +7,11 @@ package tests;/*
 import logic.Game;
 import logic.GameNode;
 import logic.Position;
-import logic.Side;
+import enums.Side;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static logic.Side.*;
+import static enums.Side.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**

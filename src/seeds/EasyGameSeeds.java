@@ -1,6 +1,6 @@
 package seeds;
 
-import static logic.Side.*;
+import static enums.Side.*;
 
 public class EasyGameSeeds {
     static final Object[][] seed1 = {

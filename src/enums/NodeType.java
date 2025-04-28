@@ -1,4 +1,4 @@
-package logic;
+package enums;
 
 public enum NodeType {
     Empty,

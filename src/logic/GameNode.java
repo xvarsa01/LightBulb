@@ -1,6 +1,8 @@
 package logic;
 
 import common.AbstractObservable;
+import enums.NodeType;
+import enums.Side;
 import logic.interfaces.IGameNode;
 
 import java.util.ArrayList;

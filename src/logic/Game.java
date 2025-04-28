@@ -1,9 +1,12 @@
 package logic;
 
-import static logic.NodeType.Empty;
+import static enums.NodeType.Empty;
 
 import common.AbstractObservable;
 import common.Observable;
+import enums.Difficulty;
+import enums.NodeType;
+import enums.Side;
 import logic.interfaces.IGame;
 import seeds.*;
 

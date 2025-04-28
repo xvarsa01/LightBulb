@@ -1,4 +1,4 @@
-import logic.Difficulty;
+import enums.Difficulty;
 import logic.Game;
 
 public class Main {
