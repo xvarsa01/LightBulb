@@ -3,6 +3,12 @@ package logic;
 import static logic.NodeType.Empty;
 import seeds.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class Game
 {
 
@@ -12,6 +18,7 @@ public class Game
     private boolean BulbNodeAlreadyPlaced;
     private final GameNode[][] Board;
     private Position PowerNodePosition;
+    private final List<Position> BulbNodePositions = new ArrayList<>();
 
     public Game(int rows, int cols){
         if(rows <= 0 || cols <= 0){
@@ -80,10 +87,6 @@ public class Game
         }
     }
 
-    public GameNode fieldAt(int x, int y) {
-        return Board[x-1][y-1];
-    }
-
     public void init(){
         if (!PowerNodeAlreadyPlaced){
             throw new RuntimeException();
@@ -94,6 +97,7 @@ public class Game
         relightBoard();
     }
 
+//    Turns off power for whole board and then turns it on only for nodes connected to power supply
     private void relightBoard(){
         for (GameNode[] gameNodes : Board) {
             for (GameNode node : gameNodes) {
@@ -151,6 +155,57 @@ public class Game
         }
     }
 
+    /**
+     * Randomly rotates one node after other, until no Bulb is connected to power
+     * @param affectedNodesPercentage probability, that node will be affected
+     * @param ms number of ms that thread will sleep after node is rotated
+     */
+    public void randomlyTurnSomeNodes(float affectedNodesPercentage, int ms, int rotatedNodesAtSameTime){
+        int nodesAlreadyRotated = 0;
+        for(int i = 1; i <= RowSize; i++){
+            for(int j = 1; j <= ColSize; j++){
+                Random rand = new Random();
+                if (rand.nextFloat() <= affectedNodesPercentage){
+                    Position p = new Position(i, j);
+
+                    // rotate node 0-3 times
+                    int numberOfTurns = rand.nextInt(4);
+                    if (numberOfTurns == 0) break;
+
+                    for (int k = 0; k < numberOfTurns; k++){
+                        node(p).turn();
+                    }
+                    nodesAlreadyRotated++;
+                }
+
+                if (nodesAlreadyRotated % rotatedNodesAtSameTime == 0) {
+                    sleep(ms);
+                }
+            }
+        }
+    }
+    private static void sleep(int ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Checks if game has been won - all Bulbs have power
+     */
+    public boolean GameFinished(){
+        boolean finished = true;
+        for(Position p : BulbNodePositions){
+            GameNode node = node(p);
+            if (!node.light()){
+                finished = false;
+            }
+        }
+        return finished;
+    }
+
     public int cols(){
         return ColSize;
     }
@@ -159,7 +214,6 @@ public class Game
         return RowSize;
     }
 
-
     public GameNode node(Position p){
         checkIfPositionIsCorrect(p);
 
@@ -167,6 +221,7 @@ public class Game
         int col = p.getCol() - 1;
         return Board[row][col];
     }
+
     public void createBulbNode(Position p, Side side){
         checkIfPositionIsCorrect(p);
         checkIfNodeIsEmpty(p);
@@ -180,6 +235,7 @@ public class Game
 //        node.addObserver(this);
 
         Board[p.getRow()-1][p.getCol()-1] = node;
+        BulbNodePositions.add(p);
     }
 
     public void createPowerNode(Position p, Side... sides){

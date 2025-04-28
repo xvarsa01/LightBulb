@@ -5,10 +5,14 @@ package tests;/*
 
 import logic.Difficulty;
 import logic.Game;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CustomTests extends TestUtils {
 
@@ -43,6 +47,24 @@ public class CustomTests extends TestUtils {
 
             testLight(lights);
         }
+    }
+
+    @Test
+    public void HardGameSeedsAllHaveCorrectStartPosition() {
+
+    }
+
+    @Test
+    public void GameFinishedCorrectlyEvaluatesGame(){
+        game = new Game(5, 5);
+        game.SeedBoard(Difficulty.easy, 0, 0, 0);
+        game.init();
+
+        assertTrue(game.GameFinished());
+
+        game.randomlyTurnSomeNodes(100, 0, 1);
+        game.init();
+        Assertions.assertFalse(game.GameFinished());
     }
 
     private List<Integer[]> CreateArrayOfPositions(){
