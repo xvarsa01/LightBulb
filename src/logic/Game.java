@@ -121,28 +121,28 @@ public class Game
     }
     private void ServiceNeighbourNodes(GameNode actualNode){
         Position actual = actualNode.position;
-        if (actualNode.north()){
+        if (actualNode.north() && actualNode.position.getRow() != 1){
             Position positionNorth = new Position(actual.getRow()-1, actual.getCol());
             GameNode NodeToService = node(positionNorth);
             if (NodeToService.south()){
                 ServiceNode(NodeToService);
             }
         }
-        if (actualNode.east()){
+        if (actualNode.east() && actualNode.position.getCol() != ColSize){
             Position positionEast = new Position(actual.getRow(), actual.getCol()+1);
             GameNode NodeToService = node(positionEast);
             if (NodeToService.west()){
                 ServiceNode(NodeToService);
             }
         }
-        if (actualNode.south()){
+        if (actualNode.south() && actualNode.position.getRow() != RowSize){
             Position positionSouth = new Position(actual.getRow()+1, actual.getCol());
             GameNode NodeToService = node(positionSouth);
             if (NodeToService.north()){
                 ServiceNode(NodeToService);
             }
         }
-        if (actualNode.west()){
+        if (actualNode.west() && actualNode.position.getCol() != 1){
             Position positionWest = new Position(actual.getRow(), actual.getCol()-1);
             GameNode NodeToService = node(positionWest);
             if (NodeToService.east()){
