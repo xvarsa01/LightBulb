@@ -63,7 +63,6 @@ public class CustomTests extends TestUtils {
         assertTrue(game.GameFinished());
 
         game.randomlyTurnSomeNodes(100, 0, 1);
-        game.init();
         Assertions.assertFalse(game.GameFinished());
     }
 

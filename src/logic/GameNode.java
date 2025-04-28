@@ -1,9 +1,11 @@
 package logic;
 
+import common.AbstractObservable;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameNode{
+public class GameNode extends AbstractObservable {
 
     public Position position;
     public NodeType nodeType;
@@ -32,8 +34,6 @@ public class GameNode{
     }
     public void setOnLighted(boolean turnOn){
         IsLighted = turnOn;
-
-//        notifyObservers();
     }
 
     public boolean containsConnector(Side s) {
@@ -76,7 +76,7 @@ public class GameNode{
         IsConnectorS = IsConnectorE;
         IsConnectorE = temp;
 
-//        notifyObservers();
+        notifyObservers();
     }
 
     public boolean light(){

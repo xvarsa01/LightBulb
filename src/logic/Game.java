@@ -1,6 +1,9 @@
 package logic;
 
 import static logic.NodeType.Empty;
+
+import common.AbstractObservable;
+import common.Observable;
 import seeds.*;
 
 import java.util.ArrayList;
@@ -9,7 +12,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Game
+public class Game extends AbstractObservable implements Observable.Observer
 {
 
     private final int ColSize;
@@ -107,6 +110,8 @@ public class Game
         GameNode PowerNode = Board[PowerNodePosition.getRow()-1][PowerNodePosition.getCol()-1];
         ServiceNode(PowerNode);
 
+        // will notify UI to rerender
+        notifyObservers();
     }
     private void ServiceNode(GameNode NodeToService){
 
@@ -232,7 +237,7 @@ public class Game
         node.nodeType = NodeType.Bulb;
         node.position = p;
         node.setSide(side);
-//        node.addObserver(this);
+        node.addObserver(this);
 
         Board[p.getRow()-1][p.getCol()-1] = node;
         BulbNodePositions.add(p);
@@ -250,7 +255,7 @@ public class Game
         node.nodeType = NodeType.Power;
         node.position = p;
         node.setMultipleSides(sides);
-//        node.addObserver(this);
+        node.addObserver(this);
 
         Board[p.getRow()-1][p.getCol()-1] = node;
         PowerNodePosition = p;
@@ -267,7 +272,7 @@ public class Game
         node.nodeType = NodeType.Link;
         node.position = p;
         node.setMultipleSides(sides);
-//        node.addObserver(this);
+        node.addObserver(this);
 
         Board[p.getRow()-1][p.getCol()-1] = node;
     }
@@ -285,12 +290,8 @@ public class Game
         }
     }
 
-//    @Override
-//    public void update(Observable observable) {
-//        if (skippNotification){
-//            return;
-//        }
-//        skippNotification = true;
-//        relightBoard();
-//    }
+    @Override
+    public void update(Observable observable) {
+        relightBoard();
+    }
 }
