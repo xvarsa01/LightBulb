@@ -18,12 +18,12 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Radek Koci <koci AT fit.vut.cz>
  */
-public class tests extends TestUtils{
+public class GivenTests extends TestUtils{
     /**
      * Definice obsazených políček ve hře. Použito pro vytvoření testovací hry.
      * def_field = {Type, row, col, list_of_connectors}
      */
-    private final Object def[][]= {
+    private final Object[][] def = {
         {"L", 4, 5, NORTH, EAST, SOUTH},
         {"L", 5, 5, NORTH, EAST, WEST},
         {"L", 5, 4, EAST, SOUTH},
@@ -51,7 +51,7 @@ public class tests extends TestUtils{
             int row = (Integer)n[1];
             int col = (Integer)n[2];
             Position p = new Position(row, col);
-            Side sides[] = new Side[n.length-3];
+            Side[] sides = new Side[n.length-3];
             for (int i = 3; i < n.length; i++) {
                 sides[i-3] = (Side)n[i];
             }
@@ -72,7 +72,7 @@ public class tests extends TestUtils{
      */
     @Test
     public void test01() {
-        Integer lights[][]= {
+        Integer[][] lights = {
             {3, 5},
             {4, 5},
             {5, 5},
@@ -118,7 +118,7 @@ public class tests extends TestUtils{
         node = game.node(pos);
         node.turn();
 
-        Integer lights[][]= {
+        Integer[][] lights = {
             {3, 5},
             {4, 5},
             {5, 5},
@@ -185,7 +185,7 @@ public class tests extends TestUtils{
         node = game.node(pos4);
         node.turn();
 
-        Integer lights[][]= {
+        Integer[][] lights = {
             {3, 5},
             {4, 5},
             {5, 5},

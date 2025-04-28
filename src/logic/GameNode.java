@@ -27,7 +27,7 @@ public class GameNode extends AbstractObservable implements IGameNode {
             case WEST -> IsConnectorW = true;
             case NORTH -> IsConnectorN = true;
             case SOUTH -> IsConnectorS = true;
-        };
+        }
     }
 
     public void setMultipleSides(Side... sides){
@@ -37,19 +37,6 @@ public class GameNode extends AbstractObservable implements IGameNode {
     }
     public void setOnLighted(boolean turnOn){
         IsLighted = turnOn;
-    }
-
-    public boolean containsConnector(Side s) {
-        return switch (s) {
-            case EAST -> IsConnectorE;
-            case WEST -> IsConnectorW;
-            case NORTH -> IsConnectorN;
-            case SOUTH -> IsConnectorS;
-        };
-    }
-
-    public Position getPosition(){
-        return position;
     }
 
     public boolean isBulb(){
