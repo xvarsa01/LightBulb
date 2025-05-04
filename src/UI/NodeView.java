@@ -1,85 +1,78 @@
 package UI;
 
 import common.Observable;
-import logic.interfaces.IGame;
-import logic.interfaces.IGameNode;
+import logic.GameNode;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
+public class NodeView extends StackPane implements Observable.Observer {
 
-public class NodeView extends JPanel implements Observable.Observer {
-    private final IGameNode node;
+    private final GameNode node;
+    private Runnable onClick;
     private int changedModel = 0;
 
-    public NodeView(final IGameNode _node, final IGame game) {
-        this.node = _node;
-        this.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        this.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent var1x) {
-                _node.turn();
-            }
+    public NodeView(final GameNode node, Runnable onClick) {
+        this.node = node;
+        this.onClick = onClick;
+        setPrefSize(60, 60);
+        updateView();
+
+        setOnMouseClicked(e -> {
+            node.turn();
+            updateView();
+            if (onClick != null) onClick.run();
         });
-        game.addObserver(this);
+
+        node.addObserver(this);
     }
 
-    protected void paintComponent(Graphics var1) {
-        super.paintComponent(var1);
-        Graphics2D var2 = (Graphics2D)var1;
-        Rectangle var3 = this.getBounds();
-        double var4 = var3.getWidth();
-        double var6 = var3.getHeight();
-        double var8 = var4 / (double)2.0F;
-        double var10 = var6 / (double)2.0F;
-        Color var12 = this.node.light() ? Color.RED : Color.BLACK;
-        var2.setColor(var12);
-        var2.setStroke(new BasicStroke(2.0F));
-        if (this.node.north()) {
-            Line2D.Double var13 = new Line2D.Double(var8, (double)0.0F, var8, var10);
-            var2.draw(var13);
-        }
-
-        if (this.node.east()) {
-            Line2D.Double var21 = new Line2D.Double(var4, var10, var8, var10);
-            var2.draw(var21);
-        }
-
-        if (this.node.south()) {
-            Line2D.Double var22 = new Line2D.Double(var8, var6, var8, var10);
-            var2.draw(var22);
-        }
-
-        if (this.node.west()) {
-            Line2D.Double var23 = new Line2D.Double((double)0.0F, var10, var8, var10);
-            var2.draw(var23);
-        }
-
-        if (this.node.isPower()) {
-            this.setBackground(Color.GREEN);
-        } else if (this.node.isBulb()) {
-            double var14 = Math.min(var6, var4) - (double)10.0F;
-            double var16 = (var4 - var14) / (double)2.0F;
-            double var18 = (var6 - var14) / (double)2.0F;
-            Ellipse2D.Double var20 = new Ellipse2D.Double(var16, var18, var14, var14);
-            var2.setColor(var12);
-            var2.fill(var20);
-        }
-
+    public void update(Observable observable) {
+        changedModel++;
+        updateView();
     }
 
     public int numberUpdates() {
-        return this.changedModel;
+        return changedModel;
     }
 
     public void clearChanged() {
+        // optional: implement if needed
     }
 
-    // called from Game class at the end of relightBoard()
-    public void update(Observable var1) {
-        ++this.changedModel;
-        this.repaint();
+    public void updateView() {
+        getChildren().clear();
+
+        double w = getPrefWidth() > 0 ? getPrefWidth() : 60;
+        double h = getPrefHeight() > 0 ? getPrefHeight() : 60;
+        double midX = w / 2;
+        double midY = h / 2;
+
+        Color lineColor = node.light() ? Color.RED : Color.BLACK;
+
+        if (node.north()) addLine(midX, 0, midX, midY, lineColor);
+        if (node.east()) addLine(w, midY, midX, midY, lineColor);
+        if (node.south()) addLine(midX, h, midX, midY, lineColor);
+        if (node.west()) addLine(0, midY, midX, midY, lineColor);
+
+        if (node.isBulb()) {
+            Circle circle = new Circle(midX, midY, Math.min(w, h) / 4);
+            circle.setFill(node.light() ? Color.RED : Color.GRAY);
+            getChildren().add(circle);
+        }
+
+        if (node.isPower()) {
+            setStyle("-fx-background-color: green;");
+        } else {
+            setStyle("-fx-background-color: transparent;");
+        }
+    }
+
+    private void addLine(double x1, double y1, double x2, double y2, Color color) {
+        Line line = new Line(x1, y1, x2, y2);
+        line.setStroke(color);
+        line.setStrokeWidth(2);
+        getChildren().add(line);
     }
 }
