@@ -8,6 +8,10 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import logic.Game;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Navigation {
 
@@ -54,6 +58,50 @@ public class Navigation {
 
     public static void showGamePage(Stage stage, Difficulty difficulty) {
         GamePage gamePage = new GamePage(stage, difficulty);
-        gamePage.show();
+        Game game = gamePage.show();
+
+        WaitAndTurnNodes(game, difficulty);
+    }
+
+    private static void WaitAndTurnNodes(Game game, Difficulty difficulty) {
+
+        // countdown
+        System.out.println("3 !");
+        sleep(1000);
+        System.out.println("2 !");
+        sleep(1000);
+        System.out.println("1 !");
+        sleep(1000);
+
+        int affectedNodesPercentage, rotatedNodesAtSameTime;
+
+        switch (difficulty) {
+            case medium -> {
+                affectedNodesPercentage = 90;
+                rotatedNodesAtSameTime = 2;
+            }
+            case hard -> {
+                affectedNodesPercentage = 100;
+                rotatedNodesAtSameTime = 3;
+            }
+            default -> {
+                affectedNodesPercentage = 80;
+                rotatedNodesAtSameTime = 1;
+            }
+        }
+        new Thread(() -> {
+            game.randomlyTurnSomeNodes(affectedNodesPercentage / 100f, 500, rotatedNodesAtSameTime);
+            System.out.println("Go !");
+            // start timer in UI
+
+        }).start();
+    }
+
+    private static void sleep(int ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

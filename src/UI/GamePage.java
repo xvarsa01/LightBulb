@@ -7,7 +7,6 @@ import logic.GameNode;
 import logic.Position;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -26,24 +25,17 @@ public class GamePage {
         this.difficulty = difficulty;
     }
 
-    public void show() {
-        int rows, affectedNodesPercentage, rotatedNodesAtSameTime;
-
+    public Game show() {
+        int rows;
         switch (difficulty) {
             case medium -> {
                 rows = 6;
-                affectedNodesPercentage = 75;
-                rotatedNodesAtSameTime = 2;
             }
             case hard -> {
                 rows = 7;
-                affectedNodesPercentage = 100;
-                rotatedNodesAtSameTime = 3;
             }
             default -> {
                 rows = 5;
-                affectedNodesPercentage = 50;
-                rotatedNodesAtSameTime = 1;
             }
         }
         nodeViews = new NodeView[rows][rows];
@@ -98,5 +90,6 @@ public class GamePage {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+        return game;
     }
 }
