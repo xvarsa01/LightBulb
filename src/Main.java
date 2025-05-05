@@ -11,5 +11,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
         Navigation.showHomePage(stage);
+        stage.setMaximized(true);
+
     }
 }

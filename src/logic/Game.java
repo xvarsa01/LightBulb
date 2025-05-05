@@ -118,11 +118,6 @@ public class Game extends AbstractObservable implements Observable.Observer, IGa
 
         // will notify UI to rerender
         notifyObservers();
-        if (GameFinished()){
-            System.out.println("You won");
-
-            // TODO stop timer, disable further rotating
-        }
     }
     private void ServiceNode(GameNode NodeToService){
 
