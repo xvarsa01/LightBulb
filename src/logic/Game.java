@@ -7,10 +7,12 @@ import common.Observable;
 import enums.Difficulty;
 import enums.NodeType;
 import enums.Side;
+import javafx.application.Platform;
 import logic.interfaces.IGame;
 import seeds.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
@@ -171,25 +173,35 @@ public class Game extends AbstractObservable implements Observable.Observer, IGa
      */
     public void randomlyTurnSomeNodes(float affectedNodesPercentage, int ms, int rotatedNodesAtSameTime){
         int nodesAlreadyRotated = 0;
-        for(int i = 1; i <= RowSize; i++){
-            for(int j = 1; j <= ColSize; j++){
-                Random rand = new Random();
-                if (rand.nextFloat() <= affectedNodesPercentage){
-                    Position p = new Position(i, j);
+        List<Position> positions = new ArrayList<>();
 
-                    // rotate node 0-3 times
-                    int numberOfTurns = rand.nextInt(4);
-                    if (numberOfTurns == 0) break;
+        // Collect all positions
+        for (int i = 1; i <= RowSize; i++) {
+            for (int j = 1; j <= ColSize; j++) {
+                positions.add(new Position(i, j));
+            }
+        }
 
-                    for (int k = 0; k < numberOfTurns; k++){
-                        node(p).turn();
-                    }
-                    nodesAlreadyRotated++;
+        // Shuffle to randomize order
+        Collections.shuffle(positions, new Random());
+
+        Random rand = new Random();
+        for (Position p : positions) {
+            if (rand.nextFloat() <= affectedNodesPercentage){
+
+                // rotate node 1-3 times
+                int numberOfTurns = rand.nextInt(3)+1;
+
+                for (int k = 0; k < numberOfTurns; k++){
+                    Platform.runLater(() -> node(p).turn());
                 }
+                nodesAlreadyRotated++;
 
                 if (nodesAlreadyRotated % rotatedNodesAtSameTime == 0) {
+                    System.out.println("small sleep started");
                     sleep(ms);
                 }
+                System.out.println("sleep ended");
             }
         }
     }
