@@ -2,6 +2,8 @@ package UI;
 
 import common.Observable;
 import enums.Difficulty;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import logic.Game;
 import logic.GameNode;
 import logic.Position;
@@ -46,17 +48,20 @@ public class GamePage {
         game = new Game(rows, rows);
         game.addObserver(o -> {
             if (nodeViews[0][0] == null) return;
+            if(game.GameFinished()){
+                Platform.runLater(this::stopTimer);
+                System.out.println("You won");
+                showWinPopup();
+                //todo popup
+            }
 
             boolean allLit = true;
             for (int r = 0; r < rows; r++) {
                 for (int c = 0; c < rows; c++) {
                     nodeViews[r][c].update(o);
-                    if (!game.node(new Position(r + 1, c + 1)).light()) {
-                        allLit = false;
-                    }
                 }
             }
-            if (allLit) {
+            if (game.GameFinished()) {
                 Platform.runLater(this::stopTimer);
             }
         });
@@ -142,4 +147,22 @@ public class GamePage {
         turnLabel.setText("🔁 Turns: " + turnCount);
     }
 
+    private void showWinPopup() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Yeah!");
+        alert.setHeaderText("🎉 YOU WIN 🎉");
+        alert.setContentText("Play Again?");
+
+        ButtonType yesButton = new ButtonType("Yes");
+        ButtonType noButton = new ButtonType("No");
+        alert.getButtonTypes().setAll(yesButton, noButton);
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == yesButton) {
+                Navigation.showGamePage(stage, difficulty);
+            } else {
+                Navigation.showHomePage(stage);
+            }
+        });
+    }
 }
