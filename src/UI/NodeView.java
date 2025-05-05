@@ -10,22 +10,16 @@ import javafx.scene.shape.Line;
 public class NodeView extends StackPane implements Observable.Observer {
 
     private final GameNode node;
-    private Runnable onClick;
     private int changedModel = 0;
 
-    public NodeView(final GameNode node, Runnable onClick) {
+    public NodeView(final GameNode node) {
         this.node = node;
-        this.onClick = onClick;
         setPrefSize(60, 60);
         updateView();
 
         setOnMouseClicked(e -> {
             node.turn();
-            updateView();
-            if (onClick != null) onClick.run();
         });
-
-        node.addObserver(this);
     }
 
     public void update(Observable observable) {
@@ -73,6 +67,9 @@ public class NodeView extends StackPane implements Observable.Observer {
         Line line = new Line(x1, y1, x2, y2);
         line.setStroke(color);
         line.setStrokeWidth(2);
+        line.setManaged(false); // Ignore StackPane's layout rules
+        line.setLayoutX(0);
+        line.setLayoutY(0);
         getChildren().add(line);
     }
 }

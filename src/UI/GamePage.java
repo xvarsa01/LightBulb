@@ -1,5 +1,6 @@
 package UI;
 
+import common.Observable;
 import enums.Difficulty;
 import logic.Game;
 import logic.GameNode;
@@ -18,6 +19,7 @@ public class GamePage {
 
     private final Stage stage;
     private final Difficulty difficulty;
+    private NodeView[][] nodeViews;
 
     public GamePage(Stage stage, Difficulty difficulty) {
         this.stage = stage;
@@ -44,11 +46,26 @@ public class GamePage {
                 rotatedNodesAtSameTime = 1;
             }
         }
+        nodeViews = new NodeView[rows][rows];
 
         Game game = new Game(rows, rows);
+        game.addObserver(new Observable.Observer() {
+            @Override
+            public void update(Observable o) {
+                // This will only be called after relightBoard() finishes
+                if (nodeViews[0][0] == null){
+                    return;
+                }
+
+                for (int r = 0; r < rows; r++) {
+                    for (int c = 0; c < rows; c++) {
+                            nodeViews[r][c].update(o);
+                    }
+                }
+            }
+        });
         game.SeedBoard(difficulty, 1, 1, 1);
         game.init();
-        game.randomlyTurnSomeNodes(affectedNodesPercentage / 100f, 0, rotatedNodesAtSameTime);
 
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(20));
@@ -60,13 +77,8 @@ public class GamePage {
                 Position pos = new Position(row, col);
                 GameNode node = game.node(pos);
 
-                NodeView nodeView = new NodeView(node, () -> {
-                    game.update(null);
-                    if (game.GameFinished()) {
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "🎉 All bulbs are lit! You win!");
-                        alert.showAndWait();
-                    }
-                });
+                NodeView nodeView = new NodeView(node);
+                nodeViews[row-1][col-1] = nodeView;
 
                 gridPane.add(nodeView, col - 1, row - 1);
             }
