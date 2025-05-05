@@ -18,6 +18,8 @@ import java.util.logging.Logger;
 
 public class Navigation {
 
+    public static int gamesPlayed = 0;
+
     public static void showHomePage(Stage stage) {
         Label title = new Label("💡 LightBulb Game 💡");
         title.setStyle("-fx-font-size: 36px; -fx-text-fill: white; -fx-padding: 20px;");

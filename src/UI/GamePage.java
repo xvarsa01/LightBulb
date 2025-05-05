@@ -63,11 +63,12 @@ public class GamePage {
             if(game.GameFinished() && timeline != null) {
                 Platform.runLater(this::stopTimer);
                 System.out.println("You won");
+                Navigation.gamesPlayed++;
                 showWinPopup();
             }
         });
 
-        game.SeedBoard(difficulty, 1, 1, 1);
+        game.SeedBoard(difficulty, Navigation.gamesPlayed, 1, 1);
         game.init();
 
         GridPane gridPane = new GridPane();
@@ -182,7 +183,7 @@ public class GamePage {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Yeah!");
         alert.setHeaderText("🎉 YOU WIN 🎉");
-        alert.setContentText("Play Again?");
+        alert.setContentText("Play next game?");
 
         ButtonType yesButton = new ButtonType("Yes");
         ButtonType noButton = new ButtonType("No");
