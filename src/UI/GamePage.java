@@ -1,9 +1,11 @@
 package UI;
 
-import common.Observable;
+import logger.GameLogger;
 import enums.Difficulty;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import logger.MoveHistory;
+import logger.MoveRecord;
 import logic.Game;
 import logic.GameNode;
 import logic.Position;
@@ -20,6 +22,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
+
 public class GamePage {
 
     private final Stage stage;
@@ -31,6 +35,8 @@ public class GamePage {
     private Label turnLabel;
     private int turnCount;
     private Game game;
+
+    private final MoveHistory moveHistory = new MoveHistory();
 
     public GamePage(Stage stage, Difficulty difficulty) {
         this.stage = stage;
@@ -48,21 +54,16 @@ public class GamePage {
         game = new Game(rows, rows);
         game.addObserver(o -> {
             if (nodeViews[0][0] == null) return;
-            if(game.GameFinished()){
-                Platform.runLater(this::stopTimer);
-                System.out.println("You won");
-                showWinPopup();
-                //todo popup
-            }
 
-            boolean allLit = true;
             for (int r = 0; r < rows; r++) {
                 for (int c = 0; c < rows; c++) {
                     nodeViews[r][c].update(o);
                 }
             }
-            if (game.GameFinished()) {
+            if(game.GameFinished() && timeline != null) {
                 Platform.runLater(this::stopTimer);
+                System.out.println("You won");
+                showWinPopup();
             }
         });
 
@@ -82,10 +83,26 @@ public class GamePage {
                 NodeView nodeView = new NodeView(node);
                 nodeView.setOnMouseClicked(e -> {
                     if (!nodeView.isInteractionDisabled()) {
+                        moveHistory.addMove(new MoveRecord(
+                                node.position,
+                                node.nodeType,
+                                node.light(),
+                                node.getIconRotatedCounter()
+                        ));
                         node.turn();
+
                         incrementTurnCount();
+
+                        String message = String.format(
+                                "Node turned at [%d, %d], Type: %s, Connected to power: %s",
+                                node.position.getRow(), node.position.getCol(),
+                                node.nodeType,
+                                node.light() ? "YES" : "NO"
+                        );
+                        GameLogger.log(message);
                     }
                 });
+
 
                 nodeViews[row - 1][col - 1] = nodeView;
 
@@ -94,20 +111,34 @@ public class GamePage {
         }
 
         timerLabel = new Label("⏱ Time: 0s");
+        timerLabel.setStyle("-fx-text-fill: white;");
         turnLabel = new Label("🔁 Turns: 0");
+        turnLabel.setStyle("-fx-text-fill: white;");
 
+
+        Button undoButton = new Button("⬅ Undo");
+        Button redoButton = new Button("➡ Redo");
+        undoButton.setOnAction(e -> handleUndo());
+        redoButton.setOnAction(e -> handleRedo());
 
         Button backButton = new Button("🏠 Back to Home");
         backButton.setOnAction(e -> {
             stopTimer();
+            GameLogger.close();
             Navigation.showHomePage(stage);
+
         });
 
-        VBox vbox = new VBox(10, timerLabel, turnLabel, gridPane, backButton);
+        VBox vbox = new VBox(10, timerLabel, turnLabel, gridPane, undoButton, redoButton, backButton);
         vbox.setPadding(new Insets(20));
         vbox.setStyle("-fx-alignment: center;");
 
         BorderPane root = new BorderPane();
+        File file = new File("lib/home-background.jpg");
+        String localUrl = file.toURI().toString();
+        root.setStyle("-fx-background-image: url('" + localUrl + "'); " +
+                "-fx-background-size: cover; " +
+                "-fx-background-position: center center;");
         root.setCenter(vbox);
         root.setTop(new Label("🎮 Game Page"));
 
@@ -165,4 +196,24 @@ public class GamePage {
             }
         });
     }
+
+    private void handleUndo() {
+        MoveRecord record = moveHistory.undo();
+        if (record != null) {
+            GameNode node = game.node(record.position);
+            // restore previous rotation
+            while (node.getIconRotatedCounter() != record.previousRotation) {
+                node.turn();
+            }
+        }
+    }
+
+    private void handleRedo() {
+        MoveRecord record = moveHistory.redo();
+        if (record != null) {
+            GameNode node = game.node(record.position);
+            node.turn();
+        }
+    }
+
 }
