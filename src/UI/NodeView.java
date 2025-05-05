@@ -11,6 +11,7 @@ public class NodeView extends StackPane implements Observable.Observer {
 
     private final GameNode node;
     private int changedModel = 0;
+    private boolean interactionDisabled = false;
 
     public NodeView(final GameNode node) {
         this.node = node;
@@ -18,9 +19,20 @@ public class NodeView extends StackPane implements Observable.Observer {
         updateView();
 
         setOnMouseClicked(e -> {
-            node.turn();
+            if (!interactionDisabled) {
+                node.turn();
+            }
         });
     }
+
+    public void setInteractionDisabled(boolean disabled) {
+        this.interactionDisabled = disabled;
+    }
+
+    public boolean isInteractionDisabled() {
+        return interactionDisabled;
+    }
+
 
     public void update(Observable observable) {
         changedModel++;
@@ -29,10 +41,6 @@ public class NodeView extends StackPane implements Observable.Observer {
 
     public int numberUpdates() {
         return changedModel;
-    }
-
-    public void clearChanged() {
-        // optional: implement if needed
     }
 
     public void updateView() {
@@ -67,7 +75,7 @@ public class NodeView extends StackPane implements Observable.Observer {
         Line line = new Line(x1, y1, x2, y2);
         line.setStroke(color);
         line.setStrokeWidth(2);
-        line.setManaged(false); // Ignore StackPane's layout rules
+        line.setManaged(false);
         line.setLayoutX(0);
         line.setLayoutY(0);
         getChildren().add(line);

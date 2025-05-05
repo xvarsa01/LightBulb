@@ -50,7 +50,7 @@ public class Navigation {
             Difficulty selected = easy.isSelected() ? Difficulty.easy :
                     medium.isSelected() ? Difficulty.medium :
                             Difficulty.hard;
-            Navigation.showGamePage(stage, selected);
+            showGamePage(stage, selected);
         });
 
         exitButton.setOnAction(e -> Platform.exit());
@@ -60,12 +60,18 @@ public class Navigation {
         GamePage gamePage = new GamePage(stage, difficulty);
         Game game = gamePage.show();
 
-        WaitAndTurnNodes(game, difficulty);
+        gamePage.setBoardInteractionDisabled(true);
+
+        new Thread(() -> {
+            WaitAndTurnNodes(game, difficulty);
+            Platform.runLater(() -> {
+                gamePage.setBoardInteractionDisabled(false);
+                gamePage.startTimer();
+            });
+        }).start();
     }
 
     private static void WaitAndTurnNodes(Game game, Difficulty difficulty) {
-
-        // countdown
         System.out.println("3 !");
         sleep(1000);
         System.out.println("2 !");
@@ -89,12 +95,9 @@ public class Navigation {
                 rotatedNodesAtSameTime = 1;
             }
         }
-        new Thread(() -> {
-            game.randomlyTurnSomeNodes(affectedNodesPercentage / 100f, 500, rotatedNodesAtSameTime);
-            System.out.println("Go !");
-            // start timer in UI
 
-        }).start();
+        game.randomlyTurnSomeNodes(affectedNodesPercentage / 100f, 500, rotatedNodesAtSameTime);
+        System.out.println("Go !");
     }
 
     private static void sleep(int ms) {

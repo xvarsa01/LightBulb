@@ -5,6 +5,9 @@ import enums.Difficulty;
 import logic.Game;
 import logic.GameNode;
 import logic.Position;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,12 +16,19 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class GamePage {
 
     private final Stage stage;
     private final Difficulty difficulty;
     private NodeView[][] nodeViews;
+    private Label timerLabel;
+    private Timeline timeline;
+    private int elapsedSeconds;
+    private Label turnLabel;
+    private int turnCount;
+    private Game game;
 
     public GamePage(Stage stage, Difficulty difficulty) {
         this.stage = stage;
@@ -26,36 +36,31 @@ public class GamePage {
     }
 
     public Game show() {
-        int rows;
-        switch (difficulty) {
-            case medium -> {
-                rows = 6;
-            }
-            case hard -> {
-                rows = 7;
-            }
-            default -> {
-                rows = 5;
-            }
-        }
+        int rows = switch (difficulty) {
+            case medium -> 6;
+            case hard -> 7;
+            default -> 5;
+        };
         nodeViews = new NodeView[rows][rows];
 
-        Game game = new Game(rows, rows);
-        game.addObserver(new Observable.Observer() {
-            @Override
-            public void update(Observable o) {
-                // This will only be called after relightBoard() finishes
-                if (nodeViews[0][0] == null){
-                    return;
-                }
+        game = new Game(rows, rows);
+        game.addObserver(o -> {
+            if (nodeViews[0][0] == null) return;
 
-                for (int r = 0; r < rows; r++) {
-                    for (int c = 0; c < rows; c++) {
-                            nodeViews[r][c].update(o);
+            boolean allLit = true;
+            for (int r = 0; r < rows; r++) {
+                for (int c = 0; c < rows; c++) {
+                    nodeViews[r][c].update(o);
+                    if (!game.node(new Position(r + 1, c + 1)).light()) {
+                        allLit = false;
                     }
                 }
             }
+            if (allLit) {
+                Platform.runLater(this::stopTimer);
+            }
         });
+
         game.SeedBoard(difficulty, 1, 1, 1);
         game.init();
 
@@ -70,16 +75,30 @@ public class GamePage {
                 GameNode node = game.node(pos);
 
                 NodeView nodeView = new NodeView(node);
-                nodeViews[row-1][col-1] = nodeView;
+                nodeView.setOnMouseClicked(e -> {
+                    if (!nodeView.isInteractionDisabled()) {
+                        node.turn();
+                        incrementTurnCount();
+                    }
+                });
+
+                nodeViews[row - 1][col - 1] = nodeView;
 
                 gridPane.add(nodeView, col - 1, row - 1);
             }
         }
 
-        Button backButton = new Button("🏠 Back to Home");
-        backButton.setOnAction(e -> Navigation.showHomePage(stage));
+        timerLabel = new Label("⏱ Time: 0s");
+        turnLabel = new Label("🔁 Turns: 0");
 
-        VBox vbox = new VBox(10, gridPane, backButton);
+
+        Button backButton = new Button("🏠 Back to Home");
+        backButton.setOnAction(e -> {
+            stopTimer();
+            Navigation.showHomePage(stage);
+        });
+
+        VBox vbox = new VBox(10, timerLabel, turnLabel, gridPane, backButton);
         vbox.setPadding(new Insets(20));
         vbox.setStyle("-fx-alignment: center;");
 
@@ -92,4 +111,35 @@ public class GamePage {
         stage.show();
         return game;
     }
+
+    public void setBoardInteractionDisabled(boolean disabled) {
+        for (NodeView[] row : nodeViews) {
+            for (NodeView nv : row) {
+                nv.setInteractionDisabled(disabled);
+            }
+        }
+    }
+
+    public void startTimer() {
+        elapsedSeconds = 0;
+        timerLabel.setText("⏱ Time: 0s");
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            elapsedSeconds++;
+            timerLabel.setText("⏱ Time: " + elapsedSeconds + "s");
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+    }
+
+    public void stopTimer() {
+        if (timeline != null) {
+            timeline.stop();
+        }
+    }
+
+    public void incrementTurnCount() {
+        turnCount++;
+        turnLabel.setText("🔁 Turns: " + turnCount);
+    }
+
 }
