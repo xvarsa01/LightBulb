@@ -38,14 +38,14 @@ public class Navigation {
 
         BorderPane root = new BorderPane();
         root.setCenter(vbox);
-        File file = new File("src/data/home-background.jpg");
+        File file = new File("lib/home-background.jpg");
         String localUrl = file.toURI().toString();
         root.setStyle("-fx-background-image: url('" + localUrl + "'); " +
                 "-fx-background-size: cover; " +
                 "-fx-background-position: center center;");
 
 
-        Scene scene = new Scene(root, 600, 600);
+        Scene scene = new Scene(root);
         stage.setTitle("LightBulb Game");
         stage.setScene(scene);
         stage.show();
@@ -85,11 +85,9 @@ public class Navigation {
         gamePage.setBoardInteractionDisabled(true);
 
         new Thread(() -> {
+            gamePage.setBoardInteractionDisabled(false);
             WaitAndTurnNodes(game, difficulty);
-            Platform.runLater(() -> {
-                gamePage.setBoardInteractionDisabled(false);
-                gamePage.startTimer();
-            });
+            Platform.runLater(gamePage::startTimer);
         }).start();
     }
 
@@ -118,7 +116,8 @@ public class Navigation {
             }
         }
 
-        game.randomlyTurnSomeNodes(affectedNodesPercentage / 100f, 500, rotatedNodesAtSameTime);
+        //todo add some time to rotate
+        game.randomlyTurnSomeNodes(affectedNodesPercentage / 100f, 0, rotatedNodesAtSameTime);
         System.out.println("Go !");
     }
 
