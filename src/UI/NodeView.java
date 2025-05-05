@@ -1,10 +1,11 @@
 package UI;
 
 import common.Observable;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import logic.GameNode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
 public class NodeView extends StackPane implements Observable.Observer {
@@ -53,22 +54,54 @@ public class NodeView extends StackPane implements Observable.Observer {
 
         Color lineColor = node.light() ? Color.RED : Color.BLACK;
 
-        if (node.north()) addLine(midX, 0, midX, midY, lineColor);
-        if (node.east()) addLine(w, midY, midX, midY, lineColor);
-        if (node.south()) addLine(midX, h, midX, midY, lineColor);
-        if (node.west()) addLine(0, midY, midX, midY, lineColor);
-
-        if (node.isBulb()) {
-            Circle circle = new Circle(midX, midY, Math.min(w, h) / 4);
-            circle.setFill(node.light() ? Color.RED : Color.GRAY);
-            getChildren().add(circle);
+        String imageName = null;
+        if (node.isLink()) {
+            imageName = switch (node.getLinkShape()) {
+                case L -> "pipe_L.png";
+                case I -> "pipe_I.png";
+                case T -> "pipe_T.png";
+                case X -> "pipe_X.png";
+                default -> null;
+            };
+        }
+        else if (node.isPower()) {
+            imageName = switch (node.getLinkShape()) {
+                case L -> "pipe_L_P.png";
+                case I -> "pipe_I_P.png";
+                case T -> "pipe_T_P.png";
+                case X -> "pipe_X_P.png";
+                case S -> "pipe_S_P.png";
+                default -> null;
+            };
+        }
+        else if (node.isBulb()){
+            imageName = "bulb.png";
+        }
+        if (!node.light()){
+            imageName = "off_" + imageName;
         }
 
-        if (node.isPower()) {
-            setStyle("-fx-background-color: green;");
-        } else {
-            setStyle("-fx-background-color: transparent;");
+        try {
+            Image image = new Image("file:lib/icons/darkBlue/" + imageName);
+            ImageView imageView = new ImageView(image);
+            imageView.setFitWidth(w);
+            imageView.setFitHeight(h);
+            imageView.setPreserveRatio(true);
+
+            // Rotate based on icon rotation counter (0 to 3) -> 0°, 90°, 180°, 270°
+            int rotationSteps = node.getIconRotatedCounter(); // from 0 to 3
+            imageView.setRotate(rotationSteps * 90);
+
+            getChildren().add(imageView);
+        } catch (Exception e) {
+            System.err.println("Image load failed: " + imageName);
         }
+
+        // left just for potential debug
+//        if (node.north()) addLine(midX, 0, midX, midY, lineColor);
+//        if (node.east()) addLine(w, midY, midX, midY, lineColor);
+//        if (node.south()) addLine(midX, h, midX, midY, lineColor);
+//        if (node.west()) addLine(0, midY, midX, midY, lineColor);
     }
 
     private void addLine(double x1, double y1, double x2, double y2, Color color) {

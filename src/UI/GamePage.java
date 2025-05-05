@@ -66,8 +66,8 @@ public class GamePage {
 
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(20));
-        gridPane.setHgap(5);
-        gridPane.setVgap(5);
+//        gridPane.setHgap(5);
+//        gridPane.setVgap(5);
 
         for (int row = 1; row <= rows; row++) {
             for (int col = 1; col <= rows; col++) {
