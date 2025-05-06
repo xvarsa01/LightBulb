@@ -5,8 +5,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import logic.GameNode;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class NodeView extends StackPane implements Observable.Observer {
 
@@ -14,6 +15,7 @@ public class NodeView extends StackPane implements Observable.Observer {
     private final String selectedColor;
     private int changedModel = 0;
     private boolean interactionDisabled = false;
+    private static final Map<String, Image> imageCache = new HashMap<>();
 
     public NodeView(final GameNode node, String selectedColor) {
         this.node = node;
@@ -54,8 +56,6 @@ public class NodeView extends StackPane implements Observable.Observer {
         double midX = w / 2;
         double midY = h / 2;
 
-        Color lineColor = node.light() ? Color.RED : Color.BLACK;
-
         String imageName = null;
         if (node.isLink()) {
             imageName = switch (node.getLinkShape()) {
@@ -83,36 +83,25 @@ public class NodeView extends StackPane implements Observable.Observer {
             imageName = "off_" + imageName;
         }
 
-        try {
-            Image image = new Image("file:lib/icons/darkBlue/" + imageName);
-            ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(w);
-            imageView.setFitHeight(h);
-            imageView.setPreserveRatio(true);
+        if (imageName != null) {
+            String imagePath = "file:lib/icons/" + selectedColor + "/" + imageName;
+            Image image = imageCache.computeIfAbsent(imagePath, path -> {
+                try {
+                    return new Image(path);
+                } catch (Exception e) {
+                    System.err.println("Image load failed: " + path);
+                    return null;
+                }
+            });
 
-            // Rotate based on icon rotation counter (0 to 3) -> 0°, 90°, 180°, 270°
-            int rotationSteps = node.getIconRotatedCounter(); // from 0 to 3
-            imageView.setRotate(rotationSteps * 90);
-
-            getChildren().add(imageView);
-        } catch (Exception e) {
-            System.err.println("Image load failed: " + imageName);
+            if (image != null) {
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(w);
+                imageView.setFitHeight(h);
+                imageView.setPreserveRatio(true);
+                imageView.setRotate(node.getIconRotatedCounter() * 90);
+                getChildren().add(imageView);
+            }
         }
-
-        // left just for potential debug
-//        if (node.north()) addLine(midX, 0, midX, midY, lineColor);
-//        if (node.east()) addLine(w, midY, midX, midY, lineColor);
-//        if (node.south()) addLine(midX, h, midX, midY, lineColor);
-//        if (node.west()) addLine(0, midY, midX, midY, lineColor);
-    }
-
-    private void addLine(double x1, double y1, double x2, double y2, Color color) {
-        Line line = new Line(x1, y1, x2, y2);
-        line.setStroke(color);
-        line.setStrokeWidth(2);
-        line.setManaged(false);
-        line.setLayoutX(0);
-        line.setLayoutY(0);
-        getChildren().add(line);
     }
 }
