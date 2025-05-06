@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import logic.Game;
+import logic.Score;
 
 import java.io.File;
 import java.util.logging.Level;
@@ -18,12 +19,24 @@ import java.util.logging.Logger;
 
 public class Navigation {
 
-    public static int gamesPlayed = 0;
-
     public static void showHomePage(Stage stage) {
         Label title = new Label("💡 LightBulb Game 💡");
         title.setStyle("-fx-font-size: 36px; -fx-text-fill: white; -fx-padding: 20px;");
-        title.setEffect(new DropShadow(5, Color.BLACK));
+        title.setEffect(new DropShadow(5, Color.WHITE));
+
+        Label scoreLabel = new Label("Easy: " + Score.easy() +
+                " | Medium: " + Score.medium() +
+                " | Hard: " + Score.hard());
+        scoreLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: white;");
+        Button resetButton = createStyledButton("Reset scores", "orange");
+        resetButton.setOnAction(e -> {
+            // reset properties and save
+            Score.reset();
+            // update label
+            scoreLabel.setText("Easy: " + Score.easy() +
+                    " | Medium: " + Score.medium() +
+                    " | Hard: " + Score.hard());
+        });
 
         ToggleGroup difficultyGroup = new ToggleGroup();
         RadioButton easy = createRadioButton("Easy", difficultyGroup);
@@ -32,9 +45,9 @@ public class Navigation {
         easy.setSelected(true);
 
         Button startButton = createStyledButton("Start Game");
-        Button exitButton = createStyledButton("Exit");
+        Button exitButton = createStyledButton("Exit", "red");
 
-        VBox vbox = new VBox(15, title, easy, medium, hard, startButton, exitButton);
+        VBox vbox = new VBox(15, title, scoreLabel, resetButton, easy, medium, hard, startButton, exitButton);
         vbox.setPadding(new Insets(30));
         vbox.setStyle("-fx-alignment: center;");
 
@@ -45,7 +58,6 @@ public class Navigation {
         root.setStyle("-fx-background-image: url('" + localUrl + "'); " +
                 "-fx-background-size: cover; " +
                 "-fx-background-position: center center;");
-
 
         Scene scene = new Scene(root);
         stage.setTitle("LightBulb Game");
@@ -70,12 +82,16 @@ public class Navigation {
     }
 
     private static Button createStyledButton(String text) {
+        return createStyledButton(text, "green")   ;
+    }
+
+    private static Button createStyledButton(String text, String color) {
         Button button = new Button(text);
-        button.setStyle("-fx-font-size: 18px; -fx-background-color: #4CAF50; -fx-text-fill: white; " +
+        button.setStyle("-fx-font-size: 18px; -fx-background-color: " + color + "; -fx-text-fill: white; " +
                 "-fx-padding: 10 20 10 20; -fx-background-radius: 10;");
-        button.setOnMouseEntered(e -> button.setStyle("-fx-font-size: 18px; -fx-background-color: #45a049; -fx-text-fill: white; " +
+        button.setOnMouseEntered(e -> button.setStyle("-fx-font-size: 18px; -fx-background-color: " + color + "; -fx-text-fill: black; " +
                 "-fx-padding: 10 20 10 20; -fx-background-radius: 10;"));
-        button.setOnMouseExited(e -> button.setStyle("-fx-font-size: 18px; -fx-background-color: #4CAF50; -fx-text-fill: white; " +
+        button.setOnMouseExited(e -> button.setStyle("-fx-font-size: 18px; -fx-background-color: " + color + "; -fx-text-fill: white; " +
                 "-fx-padding: 10 20 10 20; -fx-background-radius: 10;"));
         return button;
     }

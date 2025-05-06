@@ -19,7 +19,7 @@ public class GameLogger {
     }
 
     public static void log(String message) {
-        System.out.println(message);  // also print to console (optional)
+        System.out.println(message);
         writer.println(message);
         writer.flush();
     }

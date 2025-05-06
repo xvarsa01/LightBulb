@@ -21,6 +21,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import logic.Score;
 
 import java.io.File;
 
@@ -66,12 +67,12 @@ public class GamePage {
             if(game.GameFinished() && timeline != null) {
                 Platform.runLater(this::stopTimer);
                 System.out.println("You won");
-                Navigation.gamesPlayed++;
+                Score.increment(difficulty);
                 showWinPopup();
             }
         });
 
-        game.SeedBoard(difficulty, Navigation.gamesPlayed, 1, 1);
+        game.SeedBoard(difficulty, Score.easy(), Score.medium(), Score.hard());
         infoPanel = new InfoPanel(game);
         infoPanel.show();
 

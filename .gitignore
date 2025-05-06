@@ -19,3 +19,6 @@ target
 
 # Ignore game log
 game_log.txt
+
+# Ignore personal score
+scores.txt
