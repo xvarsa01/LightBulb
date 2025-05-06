@@ -45,6 +45,10 @@ public class InfoPanel {
         stage.show();
     }
 
+    public void hide() {
+        stage.hide();
+    }
+
     public void refresh(Game game) {
         int rows = game.rows();
         int cols = game.cols();

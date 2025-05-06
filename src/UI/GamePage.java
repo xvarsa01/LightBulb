@@ -137,8 +137,10 @@ public class GamePage {
         backButton.setOnAction(e -> {
             stopTimer();
             GameLogger.close();
+            if (infoPanel != null) {
+                infoPanel.hide();
+            }
             Navigation.showHomePage(stage);
-
         });
 
         VBox vbox = new VBox(10, timerLabel, turnLabel, gridPane, undoButton, redoButton, backButton);
@@ -201,6 +203,7 @@ public class GamePage {
         alert.getButtonTypes().setAll(yesButton, noButton);
 
         alert.showAndWait().ifPresent(response -> {
+            infoPanel.hide();
             if (response == yesButton) {
                 Navigation.showGamePage(stage, difficulty);
             } else {
