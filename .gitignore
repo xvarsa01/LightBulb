@@ -16,3 +16,6 @@ Thumbs.db
 
 # Ignore Java binary files from target
 target
+
+# Ignore game log
+game_log.txt

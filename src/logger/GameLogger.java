@@ -9,22 +9,22 @@ public class GameLogger {
 
     private static PrintWriter writer;
 
-//    static {
-//        try {
-//            writer = new PrintWriter(new FileWriter("game_log.txt", true));
-//            writer.println("----- New Game Session: " + LocalDateTime.now() + " -----");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    static {
+        try {
+            writer = new PrintWriter(new FileWriter("src/logger/game_log.txt", false));
+            writer.println("----- New Game Session: " + LocalDateTime.now() + " -----");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void log(String message) {
         System.out.println(message);  // also print to console (optional)
-//        writer.println(message);
-//        writer.flush();
+        writer.println(message);
+        writer.flush();
     }
 
     public static void close() {
-//        writer.close();
+        writer.close();
     }
 }
