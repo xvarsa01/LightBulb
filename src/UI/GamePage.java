@@ -37,6 +37,7 @@ public class GamePage {
     private Label turnLabel;
     private int turnCount;
     private Game game;
+    private InfoPanel infoPanel;
 
     private final MoveHistory moveHistory = new MoveHistory();
 
@@ -71,6 +72,9 @@ public class GamePage {
         });
 
         game.SeedBoard(difficulty, Navigation.gamesPlayed, 1, 1);
+        infoPanel = new InfoPanel(game);
+        infoPanel.show();
+
         game.init();
 
         Random rand = new Random();
@@ -106,20 +110,14 @@ public class GamePage {
                         node.turn();
 
                         incrementTurnCount();
-
-                        String message = String.format(
-                                "Node turned at [%d, %d], Type: %s, Connected to power: %s",
-                                node.position.getRow(), node.position.getCol(),
-                                node.nodeType,
-                                node.light() ? "YES" : "NO"
-                        );
-                        GameLogger.log(message);
+                        if (infoPanel != null) {
+                            infoPanel.refresh(game);
+                        }
+                        GameLogger.log(node.toString());
                     }
                 });
 
-
                 nodeViews[row - 1][col - 1] = nodeView;
-
                 gridPane.add(nodeView, col - 1, row - 1);
             }
         }
@@ -229,5 +227,4 @@ public class GamePage {
             node.turn();
         }
     }
-
 }
