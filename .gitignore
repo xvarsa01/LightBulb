@@ -13,3 +13,6 @@ Thumbs.db
 # Optional: ignore logs or temp files
 *.log
 *.tmp
+
+# Ignore Java binary files from target
+target
