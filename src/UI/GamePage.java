@@ -24,6 +24,8 @@ import javafx.util.Duration;
 
 import java.io.File;
 
+import java.util.Random;
+
 public class GamePage {
 
     private final Stage stage;
@@ -71,17 +73,28 @@ public class GamePage {
         game.SeedBoard(difficulty, Navigation.gamesPlayed, 1, 1);
         game.init();
 
+        Random rand = new Random();
+        String selectedColor = switch (rand.nextInt(9)){
+            case 0 -> "azure";
+            case 1 -> "brown";
+            case 2 -> "darkBlue";
+            case 3 -> "darkRed";
+            case 4 -> "green";
+            case 5 -> "lime";
+            case 6 -> "pink";
+            case 7 -> "purple";
+            default -> "yellow";
+        };
+
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(20));
-//        gridPane.setHgap(5);
-//        gridPane.setVgap(5);
 
         for (int row = 1; row <= rows; row++) {
             for (int col = 1; col <= rows; col++) {
                 Position pos = new Position(row, col);
                 GameNode node = game.node(pos);
 
-                NodeView nodeView = new NodeView(node);
+                NodeView nodeView = new NodeView(node, selectedColor);
                 nodeView.setOnMouseClicked(e -> {
                     if (!nodeView.isInteractionDisabled()) {
                         moveHistory.addMove(new MoveRecord(

@@ -11,11 +11,13 @@ import javafx.scene.shape.Line;
 public class NodeView extends StackPane implements Observable.Observer {
 
     private final GameNode node;
+    private final String selectedColor;
     private int changedModel = 0;
     private boolean interactionDisabled = false;
 
-    public NodeView(final GameNode node) {
+    public NodeView(final GameNode node, String selectedColor) {
         this.node = node;
+        this.selectedColor = selectedColor;
         setPrefSize(60, 60);
         updateView();
 
