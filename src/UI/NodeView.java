@@ -12,6 +12,8 @@ import java.util.Map;
 public class NodeView extends StackPane implements Observable.Observer {
 
     private final GameNode node;
+    private final double width;
+    private final double height;
     private final String selectedColor;
     private int changedModel = 0;
     private boolean interactionDisabled = false;
@@ -20,7 +22,11 @@ public class NodeView extends StackPane implements Observable.Observer {
     public NodeView(final GameNode node, String selectedColor) {
         this.node = node;
         this.selectedColor = selectedColor;
+
         setPrefSize(60, 60);
+        width = getPrefWidth() > 0 ? getPrefWidth() : 60;
+        height = getPrefHeight() > 0 ? getPrefHeight() : 60;
+
         updateView();
 
         setOnMouseClicked(e -> {
@@ -50,11 +56,6 @@ public class NodeView extends StackPane implements Observable.Observer {
 
     public void updateView() {
         getChildren().clear();
-
-        double w = getPrefWidth() > 0 ? getPrefWidth() : 60;
-        double h = getPrefHeight() > 0 ? getPrefHeight() : 60;
-        double midX = w / 2;
-        double midY = h / 2;
 
         String imageName = null;
         if (node.isLink()) {
@@ -96,8 +97,8 @@ public class NodeView extends StackPane implements Observable.Observer {
 
             if (image != null) {
                 ImageView imageView = new ImageView(image);
-                imageView.setFitWidth(w);
-                imageView.setFitHeight(h);
+                imageView.setFitWidth(width);
+                imageView.setFitHeight(height);
                 imageView.setPreserveRatio(true);
                 imageView.setRotate(node.getIconRotatedCounter() * 90);
                 getChildren().add(imageView);
