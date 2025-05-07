@@ -5,6 +5,7 @@ package tests;/*
 
 import enums.Difficulty;
 import logic.Game;
+import logic.Seeder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +21,8 @@ public class CustomTests extends TestUtils {
     public void EasyGameSeedsAllHaveCorrectStartPosition() {
         for(int easyGamesPlayed = 0; easyGamesPlayed < 8; easyGamesPlayed++) {
             game = new Game(5, 5);
-            game.SeedBoard(Difficulty.easy, easyGamesPlayed, 0, 0);
+            Seeder seeder = new Seeder(game);
+            seeder.SeedBoard(Difficulty.easy, easyGamesPlayed, 0, 0);
             game.init();
 
             List<Integer[]> lightsList = CreateArrayOfPositions();
@@ -38,7 +40,8 @@ public class CustomTests extends TestUtils {
     public void MediumGameSeedsAllHaveCorrectStartPosition() {
         for(int mediumGamesPlayed = 0; mediumGamesPlayed < 8; mediumGamesPlayed++) {
             game = new Game(6, 6);
-            game.SeedBoard(Difficulty.medium, 0, mediumGamesPlayed, 0);
+            Seeder seeder = new Seeder(game);
+            seeder.SeedBoard(Difficulty.medium, 0, mediumGamesPlayed, 0);
             game.init();
 
             List<Integer[]> lightsList = CreateArrayOfPositions();
@@ -56,7 +59,8 @@ public class CustomTests extends TestUtils {
     @Test
     public void GameFinishedCorrectlyEvaluatesGame(){
         game = new Game(5, 5);
-        game.SeedBoard(Difficulty.easy, 0, 0, 0);
+        Seeder seeder = new Seeder(game);
+        seeder.SeedBoard(Difficulty.easy, 0, 0, 0);
         game.init();
 
         assertTrue(game.GameFinished());

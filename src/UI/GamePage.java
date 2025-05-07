@@ -7,9 +7,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import logger.MoveHistory;
 import logger.MoveRecord;
-import logic.Game;
-import logic.GameNode;
-import logic.Position;
+import logic.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -22,7 +20,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import logic.Score;
 
 import java.io.File;
 
@@ -73,7 +70,8 @@ public class GamePage {
             }
         });
 
-        game.SeedBoard(difficulty, Score.easy(), Score.medium(), Score.hard());
+        Seeder seeder = new Seeder(game);
+        seeder.SeedBoard(difficulty, Score.easy(), Score.medium(), Score.hard());
         infoPanel = new InfoPanel(game);
         infoPanel.show();
 

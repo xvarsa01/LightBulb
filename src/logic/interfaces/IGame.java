@@ -1,13 +1,11 @@
 package logic.interfaces;
 
 import common.Observable;
-import enums.Difficulty;
 import logic.Position;
 import enums.Side;
 
 public interface IGame extends Observable
 {
-    void SeedBoard(Difficulty difficulty, int easyGamesPlayed, int mediumGamesPlayed, int hardGamesPlayed);
     void init();
     void randomlyTurnSomeNodes(float affectedNodesPercentage, int ms, int rotatedNodesAtSameTime);
     boolean GameFinished();
