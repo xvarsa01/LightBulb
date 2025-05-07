@@ -70,8 +70,8 @@ public class GamePage {
             }
         });
 
-        Seeder seeder = new Seeder(game);
-        seeder.SeedBoard(difficulty, Score.easy(), Score.medium(), Score.hard());
+        MapGenerator mapGenerator = new MapGenerator();
+        mapGenerator.generateMap(game, rows, rows);
         infoPanel = new InfoPanel(game);
         infoPanel.show();
 
