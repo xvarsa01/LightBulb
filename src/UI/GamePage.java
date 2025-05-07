@@ -52,8 +52,36 @@ public class GamePage {
             default -> 5;
         };
         nodeViews = new NodeView[rows][rows];
-
         game = new Game(rows, rows);
+
+        setupGameObserver(rows);
+        generateValidMap(rows);
+
+        infoPanel = new InfoPanel(game);
+        infoPanel.show();
+
+        game.init();
+        String selectedColor = getRandomColor();
+
+        GridPane gridPane = createGameGrid(rows, selectedColor);
+        VBox vbox = setupVBox(gridPane);
+
+        BorderPane root = new BorderPane();
+        setBackgroundImage(root);
+        root.setCenter(vbox);
+        root.setTop(new Label("🎮 Game Page"));
+
+        stage.setScene(new Scene(root));
+        stage.show();
+        return game;
+    }
+
+    private static String getRandomColor() {
+        String[] colors = {"azure", "brown", "darkBlue", "darkRed", "green", "lime", "pink", "purple", "yellow"};
+        return colors[new Random().nextInt(colors.length)];
+    }
+
+    private void setupGameObserver(int rows) {
         game.addObserver(o -> {
             if (nodeViews[0][0] == null) return;
 
@@ -62,28 +90,35 @@ public class GamePage {
                     nodeViews[r][c].update(o);
                 }
             }
-            if(game.GameFinished() && timeline != null) {
+
+            if (game.GameFinished() && timeline != null) {
                 Platform.runLater(this::stopTimer);
-                System.out.println("You won");
                 Score.increment(difficulty);
                 showWinPopup();
             }
         });
+    }
 
-        MapGenerator mapGenerator = new MapGenerator();
-        mapGenerator.generateMap(game, rows, rows);
-        while(!isNiceMap(game, rows)) {
+    private void generateValidMap(int rows) {
+        MapGenerator generator = new MapGenerator();
+        generator.generateMap(game, rows, rows);
+        while (!isNiceMap(game, rows)) {
             game.clearMap();
-            mapGenerator.generateMap(game, rows, rows);
+            generator.generateMap(game, rows, rows);
         }
+    }
 
+    private boolean isNiceMap(Game game, int rows) {
+        int bulbs = game.bulbNodesCount();
+        return switch (rows) {
+            case 5 -> bulbs >= 5 && bulbs <= 7;
+            case 6 -> bulbs >= 7 && bulbs <= 9;
+            case 7 -> bulbs >= 9 && bulbs <= 11;
+            default -> true;
+        };
+    }
 
-        infoPanel = new InfoPanel(game);
-        infoPanel.show();
-
-        game.init();
-        String selectedColor = getColor();
-
+    private GridPane createGameGrid(int rows, String color) {
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(20));
 
@@ -91,105 +126,66 @@ public class GamePage {
             for (int col = 1; col <= rows; col++) {
                 Position pos = new Position(row, col);
                 GameNode node = game.node(pos);
+                NodeView nodeView = new NodeView(node, color);
 
-                NodeView nodeView = new NodeView(node, selectedColor);
                 nodeView.setOnMouseClicked(e -> {
-                    if (nodeView.isInteractionDisabled()) {
-                        return;
-                    }
-                    moveHistory.addMove(new MoveRecord(
-                            node.position,
-                            node.nodeType,
-                            node.isLighted(),
-                            node.getActualRotation()
-                    ));
-                    node.turn(true);
-
-                    incrementTurnCount();
-                    if (infoPanel != null) {
-                        infoPanel.refresh(game);
-                    }
-                    GameLogger.log(node.toString());
+                    handleMouseClick(nodeView, node);
                 });
 
                 nodeViews[row - 1][col - 1] = nodeView;
                 gridPane.add(nodeView, col - 1, row - 1);
             }
         }
+        return gridPane;
+    }
 
+    private void handleMouseClick(NodeView nodeView, GameNode node) {
+        if (nodeView.isInteractionDisabled()) {
+            return;
+        }
+        moveHistory.addMove(new MoveRecord(
+                node.position,
+                node.nodeType,
+                node.isLighted(),
+                node.getActualRotation()
+        ));
+        node.turn(true);
+
+        incrementTurnCount();
+        if (infoPanel != null) {
+            infoPanel.refresh(game);
+        }
+        GameLogger.log(node.toString());
+    }
+
+    private VBox setupVBox(GridPane gridPane) {
         timerLabel = new Label("⏱ Time: 0s");
         timerLabel.setStyle("-fx-text-fill: white;");
+
         turnLabel = new Label("🔁 Turns: 0");
         turnLabel.setStyle("-fx-text-fill: white;");
 
+        HBox buttonRow = new HBox(20,
+                createStyledButton("⬅ Undo", "silver", this::handleUndo),
+                createStyledButton("🏠 Home", "gray", () -> Navigation.showHomePage(stage)),
+                createStyledButton("➡ Redo", "silver", this::handleRedo)
+        );
 
-        Button undoButton = createStyledButton("⬅ Undo");
-        Button redoButton = createStyledButton("➡ Redo");
-        Button backButton = createStyledButton("🏠 Home", "gray");
-
-        undoButton.setOnAction(e -> handleUndo());
-        redoButton.setOnAction(e -> handleRedo());
-        backButton.setOnAction(e -> {
-            stopTimer();
-            GameLogger.close();
-            if (infoPanel != null) infoPanel.hide();
-            Navigation.showHomePage(stage);
-        });
-
-        HBox buttonRow = new HBox(20, undoButton, backButton, redoButton);
         buttonRow.setPadding(new Insets(10));
         buttonRow.setStyle("-fx-alignment: center;");
-
-
 
         VBox vbox = new VBox(10, timerLabel, turnLabel, gridPane, buttonRow);
         vbox.setPadding(new Insets(20));
         vbox.setStyle("-fx-alignment: center;");
 
+        return vbox;
+    }
 
-        BorderPane root = new BorderPane();
+    private void setBackgroundImage(BorderPane root) {
         File file = new File("lib/home-background.jpg");
         String localUrl = file.toURI().toString();
         root.setStyle("-fx-background-image: url('" + localUrl + "'); " +
-                "-fx-background-size: cover; " +
-                "-fx-background-position: center center;");
-        root.setCenter(vbox);
-        root.setTop(new Label("🎮 Game Page"));
-
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-        return game;
-    }
-
-    private static String getColor() {
-        Random rand = new Random();
-        return switch (rand.nextInt(9)) {
-            case 0 -> "azure";
-            case 1 -> "brown";
-            case 2 -> "darkBlue";
-            case 3 -> "darkRed";
-            case 4 -> "green";
-            case 5 -> "lime";
-            case 6 -> "pink";
-            case 7 -> "purple";
-            default -> "yellow";
-        };
-    }
-
-    private boolean isNiceMap(Game game, int rows) {
-        if (rows == 5){
-            return game.bulbNodesCount() >= 5 && game.bulbNodesCount() <= 7;
-        }
-        else if (rows == 6){
-            return game.bulbNodesCount() >= 7 && game.bulbNodesCount() <= 9;
-        }
-        else if (rows == 7){
-            return game.bulbNodesCount() >= 9 && game.bulbNodesCount() <= 11;
-        }
-        else {
-            return true; // in current state game always has 5/6/7 rows and cols
-        }
+                "-fx-background-size: cover; -fx-background-position: center center;");
     }
 
     public void setBoardInteractionDisabled(boolean disabled) {
@@ -261,18 +257,16 @@ public class GamePage {
         }
     }
 
-    private static Button createStyledButton(String text) {
-        return createStyledButton(text, "silver");
-    }
-
-    private static Button createStyledButton(String text, String color) {
+    private static Button createStyledButton(String text, String color, Runnable action) {
         Button button = new Button(text);
-        button.setStyle("-fx-font-size: 18px; -fx-background-color: " + color + "; -fx-text-fill: white; " +
-                "-fx-padding: 10 20 10 20; -fx-background-radius: 10;");
-        button.setOnMouseEntered(e -> button.setStyle("-fx-font-size: 18px; -fx-background-color: " + color + "; -fx-text-fill: black; " +
-                "-fx-padding: 10 20 10 20; -fx-background-radius: 10;"));
-        button.setOnMouseExited(e -> button.setStyle("-fx-font-size: 18px; -fx-background-color: " + color + "; -fx-text-fill: white; " +
-                "-fx-padding: 10 20 10 20; -fx-background-radius: 10;"));
+        String baseStyle = "-fx-font-size: 18px; -fx-background-color: " + color +
+                "; -fx-text-fill: white; -fx-padding: 10 20 10 20; -fx-background-radius: 10;";
+
+        button.setStyle(baseStyle);
+        button.setOnMouseEntered(e -> button.setStyle(baseStyle.replace("white", "black")));
+        button.setOnMouseExited(e -> button.setStyle(baseStyle));
+        button.setOnAction(e -> action.run());
+
         return button;
     }
 
