@@ -5,6 +5,7 @@ package tests;/*
 
 import enums.Difficulty;
 import logic.Game;
+import logic.Randomizer;
 import logic.Seeder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -65,7 +66,8 @@ public class CustomTests extends TestUtils {
 
         assertTrue(game.GameFinished());
 
-        game.randomlyTurnSomeNodes(100, 0, 1);
+        Randomizer randomizer = new Randomizer(game);
+        randomizer.randomlyTurnSomeNodes(100, 0, 1);
         Assertions.assertFalse(game.GameFinished());
     }
 

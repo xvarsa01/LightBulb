@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import logic.Game;
+import logic.Randomizer;
 import logic.Score;
 
 import java.io.File;
@@ -135,7 +136,8 @@ public class Navigation {
         }
 
         //todo add some time to rotate
-        game.randomlyTurnSomeNodes(affectedNodesPercentage / 100f, 0, rotatedNodesAtSameTime);
+        Randomizer randomizer = new Randomizer(game);
+        randomizer.randomlyTurnSomeNodes(affectedNodesPercentage / 100f, 0, rotatedNodesAtSameTime);
         System.out.println("Go !");
     }
 

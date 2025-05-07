@@ -7,7 +7,6 @@ import enums.Side;
 public interface IGame extends Observable
 {
     void init();
-    void randomlyTurnSomeNodes(float affectedNodesPercentage, int ms, int rotatedNodesAtSameTime);
     boolean GameFinished();
     int cols();
     int rows();
