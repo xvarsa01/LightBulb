@@ -20,15 +20,13 @@ public class InfoPanel {
         labels = new Label[rows][cols];
         GridPane gridPane = new GridPane();
 
-        for (int r = 1; r <= rows; r++) {
-            for (int c = 1; c <= cols; c++) {
-                GameNode node = game.node(new Position(r, c));
-                int needed = node.turnsRemainingToCorrectRotation();
-                int actual = node.getUserRotatedCounter();
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                GameNode node = game.node(new Position(r + 1, c + 1));
 
-                Label label = new Label("Need: " + needed + "\nTurns: " + actual);
-                labels[r - 1][c - 1] = label;
-                gridPane.add(label, c - 1, r - 1);
+                Label label = new Label(formatLabelText(node));
+                labels[r][c] = label;
+                gridPane.add(label, c, r);
             }
         }
 
@@ -48,17 +46,16 @@ public class InfoPanel {
     }
 
     public void refresh(Game game) {
-        int rows = game.rows();
-        int cols = game.cols();
-
-        for (int r = 1; r <= rows; r++) {
-            for (int c = 1; c <= cols; c++) {
+        for (int r = 1; r <= game.rows(); r++) {
+            for (int c = 1; c <= game.cols(); c++) {
                 GameNode node = game.node(new Position(r, c));
-                int needed = node.turnsRemainingToCorrectRotation();
-                int actual = node.getUserRotatedCounter();
-                labels[r - 1][c - 1].setText("Need: " + needed + "\nTurns: " + actual);
+                labels[r - 1][c - 1].setText(formatLabelText(node));
             }
         }
     }
 
+    private String formatLabelText(GameNode node) {
+        return "Need: " + node.turnsRemainingToCorrectRotation() +
+                "\nTurns: " + node.getUserRotatedCounter();
+    }
 }

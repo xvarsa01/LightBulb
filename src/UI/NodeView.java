@@ -100,7 +100,7 @@ public class NodeView extends StackPane implements Observable.Observer {
                 imageView.setFitWidth(width);
                 imageView.setFitHeight(height);
                 imageView.setPreserveRatio(true);
-                imageView.setRotate(node.getActualRotation() * 90);
+                imageView.setRotate(node.getIconRotation() * 90);
                 getChildren().add(imageView);
             }
         }

@@ -20,7 +20,7 @@ public class GameNode extends AbstractObservable implements IGameNode {
     private boolean IsConnectorW = false;
     private boolean IsLighted = false;
     private LinkShapes linkShape = LinkShapes.undefined;
-    private int IconRotatedCounter = 0;
+    private int InitialIconRotationNeeded = 0;
     private int UserRotatedCounter = 0;
     private int TotalRotatedCounter = 0;
 
@@ -31,19 +31,19 @@ public class GameNode extends AbstractObservable implements IGameNode {
         switch (side) {
             case NORTH -> {
                 IsConnectorN = true;
-                IconRotatedCounter = 1;
+                InitialIconRotationNeeded = 1;
             }
             case EAST -> {
                 IsConnectorE = true;
-                IconRotatedCounter = 2;
+                InitialIconRotationNeeded = 2;
             }
             case SOUTH -> {
                 IsConnectorS = true;
-                IconRotatedCounter = 3;
+                InitialIconRotationNeeded = 3;
             }
             case WEST -> {
                 IsConnectorW = true ;
-                IconRotatedCounter = 0;
+                InitialIconRotationNeeded = 0;
             }
         }
     }
@@ -63,20 +63,20 @@ public class GameNode extends AbstractObservable implements IGameNode {
             }
             else if (sides[0] == Side.SOUTH && sides[1] == Side.NORTH || sides[0] == Side.NORTH && sides[1] == Side.SOUTH){
                 linkShape = LinkShapes.I;
-                IconRotatedCounter = 1;
+                InitialIconRotationNeeded = 1;
             }
             else{
                 linkShape = LinkShapes.L;
 
                 List<Side> sidesList = Arrays.asList(sides);
                 if (sidesList.contains(Side.EAST) && sidesList.contains(Side.SOUTH)) {
-                    IconRotatedCounter = 0; // default
+                    InitialIconRotationNeeded = 0; // default
                 } else if (sidesList.contains(Side.SOUTH) && sidesList.contains(Side.WEST)) {
-                    IconRotatedCounter = 1;
+                    InitialIconRotationNeeded = 1;
                 } else if (sidesList.contains(Side.WEST) && sidesList.contains(Side.NORTH)) {
-                    IconRotatedCounter = 2;
+                    InitialIconRotationNeeded = 2;
                 } else if (sidesList.contains(Side.NORTH) && sidesList.contains(Side.EAST)) {
-                    IconRotatedCounter = 3;
+                    InitialIconRotationNeeded = 3;
                 }
             }
         }
@@ -86,13 +86,13 @@ public class GameNode extends AbstractObservable implements IGameNode {
             // Figure out the missing side
             List<Side> sidesList = Arrays.asList(sides);
             if (!sidesList.contains(Side.NORTH)) {
-                IconRotatedCounter = 0;
+                InitialIconRotationNeeded = 0;
             } else if (!sidesList.contains(Side.WEST)) {
-                IconRotatedCounter = 3;
+                InitialIconRotationNeeded = 3;
             } else if (!sidesList.contains(Side.SOUTH)) {
-                IconRotatedCounter = 2;
+                InitialIconRotationNeeded = 2;
             } else if (!sidesList.contains(Side.EAST)) {
-                IconRotatedCounter = 1;
+                InitialIconRotationNeeded = 1;
             }
         }
         else if (Arrays.stream(sides).count() == 4) {
@@ -130,9 +130,10 @@ public class GameNode extends AbstractObservable implements IGameNode {
     public LinkShapes getLinkShape() {
         return linkShape;
     }
-    public int getUserRotatedCounter() {return UserRotatedCounter;}
 
-    public int getActualRotation() {return IconRotatedCounter % 4;}
+    public int getUserRotatedCounter() {return UserRotatedCounter;}
+    public int getActualRotation() {return TotalRotatedCounter % 4;}
+    public int getIconRotation() {return TotalRotatedCounter % 4 + InitialIconRotationNeeded;}
 
     /**
      * @return minimal number of turns needed to get node into final state
@@ -153,7 +154,6 @@ public class GameNode extends AbstractObservable implements IGameNode {
         if (userRotated){
             UserRotatedCounter++;
         }
-        IconRotatedCounter++;
         TotalRotatedCounter++;
         notifyObservers();
     }
