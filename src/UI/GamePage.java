@@ -1,6 +1,6 @@
 package UI;
 
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
 import logger.GameLogger;
 import enums.Difficulty;
 import javafx.scene.control.Alert;
@@ -15,9 +15,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -36,7 +33,10 @@ public class GamePage {
     private Label turnLabel;
     private int turnCount;
     private Game game;
+
     private InfoPanel infoPanel;
+    private StackPane gameLayer;
+    private VBox pauseOverlay;
 
     private final MoveHistory moveHistory = new MoveHistory();
 
@@ -64,11 +64,11 @@ public class GamePage {
         String selectedColor = getRandomColor();
 
         GridPane gridPane = createGameGrid(rows, selectedColor);
-        VBox vbox = setupVBox(gridPane);
+        StackPane stackPane = setupGameStack(gridPane);
 
         BorderPane root = new BorderPane();
         setBackgroundImage(root);
-        root.setCenter(vbox);
+        root.setCenter(stackPane);
         root.setTop(new Label("🎮 Game Page"));
 
         stage.setScene(new Scene(root));
@@ -158,6 +158,40 @@ public class GamePage {
         GameLogger.log(node.toString());
     }
 
+    private StackPane setupGameStack(GridPane gridPane) {
+        timerLabel = new Label("⏱ Time: 0s");
+        timerLabel.setStyle("-fx-text-fill: white;");
+
+        turnLabel = new Label("🔁 Turns: 0");
+        turnLabel.setStyle("-fx-text-fill: white;");
+
+        HBox buttonRowTop = new HBox(20,
+                timerLabel,
+                turnLabel,
+                createStyledButton("⏸ Pause", "silver", this::showPauseMenu)
+        );
+        buttonRowTop.setPadding(new Insets(10));
+        buttonRowTop.setStyle("-fx-alignment: center;");
+
+        HBox buttonRowBottom = new HBox(20,
+                createStyledButton("⬅ Undo", "silver", this::handleUndo),
+                createStyledButton("🏠 Home", "gray", () -> Navigation.showHomePage(stage)),
+                createStyledButton("➡ Redo", "silver", this::handleRedo)
+        );
+        buttonRowBottom.setPadding(new Insets(10));
+        buttonRowBottom.setStyle("-fx-alignment: center;");
+
+        VBox mainVBox = new VBox(10, buttonRowTop, gridPane, buttonRowBottom);
+        mainVBox.setPadding(new Insets(20));
+        mainVBox.setStyle("-fx-alignment: center;");
+        mainVBox.setMouseTransparent(false); // Important
+
+        setupPauseOverlay(); // make sure this sets up a full overlay
+
+        StackPane stack = new StackPane(mainVBox, pauseOverlay);
+        return stack;
+    }
+
     private VBox setupVBox(GridPane gridPane) {
         timerLabel = new Label("⏱ Time: 0s");
         timerLabel.setStyle("-fx-text-fill: white;");
@@ -165,20 +199,59 @@ public class GamePage {
         turnLabel = new Label("🔁 Turns: 0");
         turnLabel.setStyle("-fx-text-fill: white;");
 
-        HBox buttonRow = new HBox(20,
+        HBox buttonRowTop = new HBox(20,
+                timerLabel,
+                turnLabel,
+                createStyledButton("⏸ Pause", "silver", this::showPauseMenu)
+        );
+
+        HBox buttonRowBottom = new HBox(20,
                 createStyledButton("⬅ Undo", "silver", this::handleUndo),
                 createStyledButton("🏠 Home", "gray", () -> Navigation.showHomePage(stage)),
                 createStyledButton("➡ Redo", "silver", this::handleRedo)
         );
 
-        buttonRow.setPadding(new Insets(10));
-        buttonRow.setStyle("-fx-alignment: center;");
+        buttonRowBottom.setPadding(new Insets(10));
+        buttonRowBottom.setStyle("-fx-alignment: center;");
+        buttonRowTop.setPadding(new Insets(10));
+        buttonRowTop.setStyle("-fx-alignment: center;");
 
-        VBox vbox = new VBox(10, timerLabel, turnLabel, gridPane, buttonRow);
+        gameLayer = new StackPane(gridPane);
+        gameLayer.setStyle("-fx-alignment: center;");
+
+        setupPauseOverlay();
+
+        StackPane layeredPane = new StackPane(gameLayer, pauseOverlay);
+
+        VBox vbox = new VBox(10, buttonRowTop, layeredPane, buttonRowBottom);
         vbox.setPadding(new Insets(20));
         vbox.setStyle("-fx-alignment: center;");
 
         return vbox;
+    }
+
+    private void setupPauseOverlay() {
+        pauseOverlay = new VBox(20);
+        pauseOverlay.setStyle("""
+        -fx-background-color: rgba(0, 0, 0, 0.5);
+        -fx-alignment: center;
+        -fx-padding: 40;
+    """);
+
+        Button resumeButton = createStyledButton("▶ Resume", "green", this::hidePauseMenu);
+        Button homeButton = createStyledButton("🏠 Main Menu", "gray", () -> {
+            stopTimer();
+            if (infoPanel != null) infoPanel.hide();
+            Navigation.showHomePage(stage);
+        });
+
+        pauseOverlay.getChildren().addAll(resumeButton, homeButton);
+        pauseOverlay.setVisible(false);
+
+        // Make sure it resizes and blocks interaction
+        pauseOverlay.setMouseTransparent(false);
+        pauseOverlay.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        pauseOverlay.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
     }
 
     private void setBackgroundImage(BorderPane root) {
@@ -194,6 +267,23 @@ public class GamePage {
                 nv.setInteractionDisabled(disabled);
             }
         }
+    }
+
+    private void disableBoardInteractionAndButtons(boolean disabled) {
+        setBoardInteractionDisabled(disabled);
+
+    }
+
+    private void showPauseMenu() {
+        pauseOverlay.setVisible(true);
+        disableBoardInteractionAndButtons(true);
+        stopTimer();
+    }
+
+    private void hidePauseMenu() {
+        pauseOverlay.setVisible(false);
+        disableBoardInteractionAndButtons(false);
+        startTimer();
     }
 
     public void startTimer() {
