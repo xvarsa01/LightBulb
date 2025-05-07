@@ -73,7 +73,7 @@ public class Game extends AbstractObservable implements Observable.Observer, IGa
         if (NodeToService.nodeType == Empty){
             return;
         }
-        if (NodeToService.light()){
+        if (NodeToService.isLighted()){
             return;
         }
 
@@ -169,7 +169,7 @@ public class Game extends AbstractObservable implements Observable.Observer, IGa
         boolean finished = true;
         for(Position p : BulbNodePositions){
             GameNode node = node(p);
-            if (!node.light()){
+            if (!node.isLighted()){
                 finished = false;
             }
         }

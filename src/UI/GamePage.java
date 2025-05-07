@@ -104,7 +104,7 @@ public class GamePage {
                         moveHistory.addMove(new MoveRecord(
                                 node.position,
                                 node.nodeType,
-                                node.light(),
+                                node.isLighted(),
                                 node.getIconRotatedCounter()
                         ));
                         node.turn();

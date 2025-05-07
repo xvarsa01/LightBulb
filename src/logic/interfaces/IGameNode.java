@@ -4,7 +4,7 @@ import common.Observable;
 
 public interface IGameNode extends Observable {
     void turn();
-    boolean light();
+    boolean isLighted();
 
     boolean north();
     boolean east();

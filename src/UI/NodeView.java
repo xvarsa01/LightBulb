@@ -80,7 +80,7 @@ public class NodeView extends StackPane implements Observable.Observer {
         else if (node.isBulb()){
             imageName = "bulb.png";
         }
-        if (!node.light()){
+        if (!node.isLighted()){
             imageName = "off_" + imageName;
         }
 

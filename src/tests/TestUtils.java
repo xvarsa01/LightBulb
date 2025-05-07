@@ -37,12 +37,12 @@ public class TestUtils {
             Position pos = new Position(row, col);
             allpos.remove(pos);
             GameNode node = game.node(pos);
-            assertTrue(node.light(), "Políčko " + pos + " má být pod proudem.");
+            assertTrue(node.isLighted(), "Políčko " + pos + " má být pod proudem.");
         }
 
         for (Position pos : allpos) {
             GameNode node = game.node(pos);
-            assertFalse(node.light(), "Políčko " + pos + " nemá být pod proudem.");
+            assertFalse(node.isLighted(), "Políčko " + pos + " nemá být pod proudem.");
         }
     }
 

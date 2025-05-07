@@ -141,7 +141,7 @@ public class GameNode extends AbstractObservable implements IGameNode {
         notifyObservers();
     }
 
-    public boolean light(){
+    public boolean isLighted(){
         return IsLighted;
     }
 
