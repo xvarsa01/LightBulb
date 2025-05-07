@@ -3,6 +3,7 @@ package seeds;
 import static enums.Side.*;
 
 public class EasyGameSeeds {
+    // col x row
     static final Object[][] seed1 = {
         {"L", 1, 1, EAST, SOUTH},
         {"B", 1, 2, WEST},

@@ -1,5 +1,6 @@
 package UI;
 
+import javafx.scene.layout.HBox;
 import logger.GameLogger;
 import enums.Difficulty;
 import javafx.scene.control.Alert;
@@ -129,24 +130,29 @@ public class GamePage {
         turnLabel.setStyle("-fx-text-fill: white;");
 
 
-        Button undoButton = new Button("⬅ Undo");
-        Button redoButton = new Button("➡ Redo");
+        Button undoButton = createStyledButton("⬅ Undo");
+        Button redoButton = createStyledButton("➡ Redo");
+        Button backButton = createStyledButton("🏠 Home", "gray");
+
         undoButton.setOnAction(e -> handleUndo());
         redoButton.setOnAction(e -> handleRedo());
-
-        Button backButton = new Button("🏠 Back to Home");
         backButton.setOnAction(e -> {
             stopTimer();
             GameLogger.close();
-            if (infoPanel != null) {
-                infoPanel.hide();
-            }
+            if (infoPanel != null) infoPanel.hide();
             Navigation.showHomePage(stage);
         });
 
-        VBox vbox = new VBox(10, timerLabel, turnLabel, gridPane, undoButton, redoButton, backButton);
+        HBox buttonRow = new HBox(20, undoButton, backButton, redoButton);
+        buttonRow.setPadding(new Insets(10));
+        buttonRow.setStyle("-fx-alignment: center;");
+
+
+
+        VBox vbox = new VBox(10, timerLabel, turnLabel, gridPane, buttonRow);
         vbox.setPadding(new Insets(20));
         vbox.setStyle("-fx-alignment: center;");
+
 
         BorderPane root = new BorderPane();
         File file = new File("lib/home-background.jpg");
@@ -231,4 +237,20 @@ public class GamePage {
             node.turn();
         }
     }
+
+    private static Button createStyledButton(String text) {
+        return createStyledButton(text, "silver");
+    }
+
+    private static Button createStyledButton(String text, String color) {
+        Button button = new Button(text);
+        button.setStyle("-fx-font-size: 18px; -fx-background-color: " + color + "; -fx-text-fill: white; " +
+                "-fx-padding: 10 20 10 20; -fx-background-radius: 10;");
+        button.setOnMouseEntered(e -> button.setStyle("-fx-font-size: 18px; -fx-background-color: " + color + "; -fx-text-fill: black; " +
+                "-fx-padding: 10 20 10 20; -fx-background-radius: 10;"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-font-size: 18px; -fx-background-color: " + color + "; -fx-text-fill: white; " +
+                "-fx-padding: 10 20 10 20; -fx-background-radius: 10;"));
+        return button;
+    }
+
 }
