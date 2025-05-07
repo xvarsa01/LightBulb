@@ -21,6 +21,8 @@ public class GameNode extends AbstractObservable implements IGameNode {
     private boolean IsLighted = false;
     private LinkShapes linkShape = LinkShapes.undefined;
     private int IconRotatedCounter = 0;
+    private int UserRotatedCounter = 0;
+    private int TotalRotatedCounter = 0;
 
     public GameNode(){
     }
@@ -128,16 +130,31 @@ public class GameNode extends AbstractObservable implements IGameNode {
     public LinkShapes getLinkShape() {
         return linkShape;
     }
-    public int getIconRotatedCounter() {return IconRotatedCounter % 4;}
+    public int getUserRotatedCounter() {return UserRotatedCounter;}
 
-    public void turn(){
+    public int getActualRotation() {return IconRotatedCounter % 4;}
+
+    /**
+     * @return minimal number of turns needed to get node into final state
+     */
+    public int turnsRemainingToCorrectRotation(){
+        int cycleLength = getCycleLength();
+        int result = cycleLength - (TotalRotatedCounter % cycleLength);
+        return result==cycleLength ? 0 : result;
+    }
+
+    public void turn(boolean userRotated){
         boolean temp = IsConnectorN;
         IsConnectorN =  IsConnectorW;
         IsConnectorW = IsConnectorS;
         IsConnectorS = IsConnectorE;
         IsConnectorE = temp;
 
+        if (userRotated){
+            UserRotatedCounter++;
+        }
         IconRotatedCounter++;
+        TotalRotatedCounter++;
         notifyObservers();
     }
 
@@ -163,6 +180,19 @@ public class GameNode extends AbstractObservable implements IGameNode {
         str += String.join(",", connectors);
         str += "]}";
         return str;
+    }
+
+    /**
+     * @return length of the rotation cycle. If node is "+" returns 1, if it is "I" shaped returns 2, other returns 4
+     * */
+    private int getCycleLength() {
+        if (IsConnectorN && IsConnectorE && IsConnectorS && IsConnectorW) {
+            return 1;
+        }
+
+        return (IsConnectorN && IsConnectorS && !IsConnectorE && !IsConnectorW ||
+               !IsConnectorN && !IsConnectorS && IsConnectorE && IsConnectorW)
+                ? 2 : 4;
     }
 
     @Override

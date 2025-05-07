@@ -105,9 +105,9 @@ public class GamePage {
                                 node.position,
                                 node.nodeType,
                                 node.isLighted(),
-                                node.getIconRotatedCounter()
+                                node.getActualRotation()
                         ));
-                        node.turn();
+                        node.turn(true);
 
                         incrementTurnCount();
                         if (infoPanel != null) {
@@ -222,8 +222,8 @@ public class GamePage {
         if (record != null) {
             GameNode node = game.node(record.position);
             // restore previous rotation
-            while (node.getIconRotatedCounter() != record.previousRotation) {
-                node.turn();
+            while (node.getActualRotation() != record.previousRotation) {
+                node.turn(false);
             }
         }
     }
@@ -232,7 +232,7 @@ public class GamePage {
         MoveRecord record = moveHistory.redo();
         if (record != null) {
             GameNode node = game.node(record.position);
-            node.turn();
+            node.turn(false);
         }
     }
 

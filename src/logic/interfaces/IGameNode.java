@@ -3,7 +3,7 @@ package logic.interfaces;
 import common.Observable;
 
 public interface IGameNode extends Observable {
-    void turn();
+    void turn(boolean userRotated);
     boolean isLighted();
 
     boolean north();

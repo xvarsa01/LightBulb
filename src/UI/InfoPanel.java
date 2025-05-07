@@ -23,10 +23,8 @@ public class InfoPanel {
         for (int r = 1; r <= rows; r++) {
             for (int c = 1; c <= cols; c++) {
                 GameNode node = game.node(new Position(r, c));
-//                int needed = (node.getCorrectRotation() - node.getIconRotatedCounter() + 4) % 4;
-//                int actual = node.getUserRotation();
-                int needed = 0;
-                int actual = 0;
+                int needed = node.turnsRemainingToCorrectRotation();
+                int actual = node.getUserRotatedCounter();
 
                 Label label = new Label("Need: " + needed + "\nTurns: " + actual);
                 labels[r - 1][c - 1] = label;
@@ -56,10 +54,8 @@ public class InfoPanel {
         for (int r = 1; r <= rows; r++) {
             for (int c = 1; c <= cols; c++) {
                 GameNode node = game.node(new Position(r, c));
-//                int needed = (node.getCorrectRotation() - node.getIconRotatedCounter() + 4) % 4;
-//                int actual = node.getUserRotation();
-                int needed = 0;
-                int actual = 0;
+                int needed = node.turnsRemainingToCorrectRotation();
+                int actual = node.getUserRotatedCounter();
                 labels[r - 1][c - 1].setText("Need: " + needed + "\nTurns: " + actual);
             }
         }

@@ -116,7 +116,7 @@ public class GivenTests extends TestUtils{
         
         pos = new Position(3, 5);
         node = game.node(pos);
-        node.turn();
+        node.turn(false);
 
         Integer[][] lights = {
             {3, 5},
@@ -141,7 +141,7 @@ public class GivenTests extends TestUtils{
         pos = new Position(3, 5);
         node = game.node(pos);
         assertEquals("{P[3@5][EAST,SOUTH]}", node.toString(), "Test spravne reprezentace stavu policka.");   
-        node.turn();
+        node.turn(false);
 
         for (Object[] n : def) {
             String type = (String)n[0];
@@ -174,16 +174,16 @@ public class GivenTests extends TestUtils{
         
         pos1 = new Position(3, 5);
         node = game.node(pos1);
-        node.turn();
+        node.turn(false);
         pos2 = new Position(5, 5);
         node = game.node(pos2);
-        node.turn();
+        node.turn(false);
         pos3 = new Position(5, 6);
         node = game.node(pos3);
-        node.turn();
+        node.turn(false);
         pos4 = new Position(3, 3);
         node = game.node(pos4);
-        node.turn();
+        node.turn(false);
 
         Integer[][] lights = {
             {3, 5},

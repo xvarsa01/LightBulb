@@ -142,7 +142,7 @@ public class Game extends AbstractObservable implements Observable.Observer, IGa
                 int numberOfTurns = rand.nextInt(3)+1;
 
                 for (int k = 0; k < numberOfTurns; k++){
-                    Platform.runLater(() -> node(p).turn());
+                    Platform.runLater(() -> node(p).turn(false));
                 }
                 nodesAlreadyRotated++;
 
