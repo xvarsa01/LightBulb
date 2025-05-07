@@ -82,19 +82,7 @@ public class GamePage {
         infoPanel.show();
 
         game.init();
-
-        Random rand = new Random();
-        String selectedColor = switch (rand.nextInt(9)){
-            case 0 -> "azure";
-            case 1 -> "brown";
-            case 2 -> "darkBlue";
-            case 3 -> "darkRed";
-            case 4 -> "green";
-            case 5 -> "lime";
-            case 6 -> "pink";
-            case 7 -> "purple";
-            default -> "yellow";
-        };
+        String selectedColor = getColor();
 
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(20));
@@ -106,21 +94,22 @@ public class GamePage {
 
                 NodeView nodeView = new NodeView(node, selectedColor);
                 nodeView.setOnMouseClicked(e -> {
-                    if (!nodeView.isInteractionDisabled()) {
-                        moveHistory.addMove(new MoveRecord(
-                                node.position,
-                                node.nodeType,
-                                node.isLighted(),
-                                node.getActualRotation()
-                        ));
-                        node.turn(true);
-
-                        incrementTurnCount();
-                        if (infoPanel != null) {
-                            infoPanel.refresh(game);
-                        }
-                        GameLogger.log(node.toString());
+                    if (nodeView.isInteractionDisabled()) {
+                        return;
                     }
+                    moveHistory.addMove(new MoveRecord(
+                            node.position,
+                            node.nodeType,
+                            node.isLighted(),
+                            node.getActualRotation()
+                    ));
+                    node.turn(true);
+
+                    incrementTurnCount();
+                    if (infoPanel != null) {
+                        infoPanel.refresh(game);
+                    }
+                    GameLogger.log(node.toString());
                 });
 
                 nodeViews[row - 1][col - 1] = nodeView;
@@ -171,6 +160,21 @@ public class GamePage {
         stage.setScene(scene);
         stage.show();
         return game;
+    }
+
+    private static String getColor() {
+        Random rand = new Random();
+        return switch (rand.nextInt(9)) {
+            case 0 -> "azure";
+            case 1 -> "brown";
+            case 2 -> "darkBlue";
+            case 3 -> "darkRed";
+            case 4 -> "green";
+            case 5 -> "lime";
+            case 6 -> "pink";
+            case 7 -> "purple";
+            default -> "yellow";
+        };
     }
 
     private boolean isNiceMap(Game game, int rows) {
