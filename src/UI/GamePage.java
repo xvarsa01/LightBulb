@@ -72,6 +72,12 @@ public class GamePage {
 
         MapGenerator mapGenerator = new MapGenerator();
         mapGenerator.generateMap(game, rows, rows);
+        while(!isNiceMap(game, rows)) {
+            game.clearMap();
+            mapGenerator.generateMap(game, rows, rows);
+        }
+
+
         infoPanel = new InfoPanel(game);
         infoPanel.show();
 
@@ -165,6 +171,21 @@ public class GamePage {
         stage.setScene(scene);
         stage.show();
         return game;
+    }
+
+    private boolean isNiceMap(Game game, int rows) {
+        if (rows == 5){
+            return game.bulbNodesCount() >= 5 && game.bulbNodesCount() <= 7;
+        }
+        else if (rows == 6){
+            return game.bulbNodesCount() >= 7 && game.bulbNodesCount() <= 9;
+        }
+        else if (rows == 7){
+            return game.bulbNodesCount() >= 9 && game.bulbNodesCount() <= 11;
+        }
+        else {
+            return true; // in current state game always has 5/6/7 rows and cols
+        }
     }
 
     public void setBoardInteractionDisabled(boolean disabled) {

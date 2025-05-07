@@ -184,6 +184,10 @@ public class Game extends AbstractObservable implements Observable.Observer, IGa
         return RowSize;
     }
 
+    public int bulbNodesCount(){
+        return BulbNodePositions.size();
+    }
+
     public GameNode node(Position p){
         checkIfPositionIsCorrect(p);
 
@@ -230,7 +234,7 @@ public class Game extends AbstractObservable implements Observable.Observer, IGa
         checkIfPositionIsCorrect(p);
         checkIfNodeIsEmpty(p);
         if (sides.length < 2 || sides.length > 4){
-           throw new RuntimeException("Link node must have between 2 and 4 sides");
+           throw new RuntimeException("Link node must have between 2 and 4 sides. Actual size is " + sides.length);
         }
 
         GameNode node =  new GameNode();
@@ -240,6 +244,26 @@ public class Game extends AbstractObservable implements Observable.Observer, IGa
         node.addObserver(this);
 
         Board[p.getRow()-1][p.getCol()-1] = node;
+    }
+
+    private void createEmptyNode(Position p){
+        checkIfPositionIsCorrect(p);
+        GameNode node =  new GameNode();
+        node.nodeType = Empty;
+        node.position = p;
+        Board[p.getRow()-1][p.getCol()-1] = node;
+    }
+
+    public void clearMap(){
+        PowerNodeAlreadyPlaced = false;
+        BulbNodeAlreadyPlaced = false;
+        BulbNodePositions.clear();
+
+        for (int i = 1; i <= RowSize; i++) {
+            for (int j = 1; j <= ColSize; j++) {
+                createEmptyNode(new Position(i, j));
+            }
+        }
     }
 
     private void checkIfPositionIsCorrect(Position p){
