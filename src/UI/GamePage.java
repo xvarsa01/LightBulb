@@ -36,7 +36,7 @@ public class GamePage {
 
     private InfoPanel infoPanel;
     private StackPane gameLayer;
-    private VBox pauseOverlay;
+    private PausePanel pauseOverlay;
 
     private final MoveHistory moveHistory = new MoveHistory();
 
@@ -231,27 +231,11 @@ public class GamePage {
     }
 
     private void setupPauseOverlay() {
-        pauseOverlay = new VBox(20);
-        pauseOverlay.setStyle("""
-        -fx-background-color: rgba(0, 0, 0, 0.5);
-        -fx-alignment: center;
-        -fx-padding: 40;
-    """);
-
-        Button resumeButton = createStyledButton("▶ Resume", "green", this::hidePauseMenu);
-        Button homeButton = createStyledButton("🏠 Main Menu", "gray", () -> {
+        pauseOverlay = new PausePanel(this::hidePauseMenu, () -> {
             stopTimer();
             if (infoPanel != null) infoPanel.hide();
             Navigation.showHomePage(stage);
         });
-
-        pauseOverlay.getChildren().addAll(resumeButton, homeButton);
-        pauseOverlay.setVisible(false);
-
-        // Make sure it resizes and blocks interaction
-        pauseOverlay.setMouseTransparent(false);
-        pauseOverlay.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        pauseOverlay.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
     }
 
     private void setBackgroundImage(BorderPane root) {
@@ -283,12 +267,16 @@ public class GamePage {
     private void hidePauseMenu() {
         pauseOverlay.setVisible(false);
         disableBoardInteractionAndButtons(false);
-        startTimer();
+        continueTimer();
     }
 
     public void startTimer() {
         elapsedSeconds = 0;
         timerLabel.setText("⏱ Time: 0s");
+        continueTimer();
+    }
+
+    private void continueTimer(){
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             elapsedSeconds++;
             timerLabel.setText("⏱ Time: " + elapsedSeconds + "s");
@@ -347,7 +335,7 @@ public class GamePage {
         }
     }
 
-    private static Button createStyledButton(String text, String color, Runnable action) {
+    public static Button createStyledButton(String text, String color, Runnable action) {
         Button button = new Button(text);
         String baseStyle = "-fx-font-size: 18px; -fx-background-color: " + color +
                 "; -fx-text-fill: white; -fx-padding: 10 20 10 20; -fx-background-radius: 10;";
