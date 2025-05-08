@@ -63,6 +63,8 @@ public class GamePage {
         game.init();
         String selectedColor = getRandomColor();
 
+
+
         GridPane gridPane = createGameGrid(rows, selectedColor);
         StackPane stackPane = setupGameStack(gridPane);
 
@@ -140,6 +142,7 @@ public class GamePage {
 
     private void handleMouseClick(NodeView nodeView, GameNode node) {
         if (nodeView.isInteractionDisabled()) {
+            System.err.print("Interaction is disabled");
             return;
         }
         moveHistory.addMove(new MoveRecord(
@@ -238,21 +241,16 @@ public class GamePage {
         }
     }
 
-    private void disableBoardInteractionAndButtons(boolean disabled) {
-        setBoardInteractionDisabled(disabled);
-
-    }
-
     private void showPauseMenu() {
         pauseOverlay.setVisible(true);
         if (infoPanel != null) infoPanel.hide();
-        disableBoardInteractionAndButtons(true);
+        setBoardInteractionDisabled(true);
         stopTimer();
     }
 
     private void hidePauseMenu() {
         pauseOverlay.setVisible(false);
-        disableBoardInteractionAndButtons(false);
+        setBoardInteractionDisabled(false);
         continueTimer();
     }
 
@@ -359,7 +357,6 @@ public class GamePage {
     }
 
     private void runRandomizer(Game game, Difficulty difficulty) {
-        setBoardInteractionDisabled(false);
 
         int affectedNodesPercentage, rotatedNodesAtSameTime;
 
@@ -381,10 +378,11 @@ public class GamePage {
         Randomizer randomizer = new Randomizer(game);
 
         new Thread(() -> {
-            randomizer.randomlyTurnSomeNodes(affectedNodesPercentage / 100f, 500, rotatedNodesAtSameTime);
+            randomizer.randomlyTurnSomeNodes(affectedNodesPercentage / 100f, 0, rotatedNodesAtSameTime);
 
             Platform.runLater(() -> {
                 isRandomizing = false;
+                setBoardInteractionDisabled(false);
                 startTimer();
             });
         }).start();

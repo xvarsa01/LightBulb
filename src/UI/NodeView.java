@@ -16,7 +16,7 @@ public class NodeView extends StackPane implements Observable.Observer {
     private final double height;
     private final String selectedColor;
     private int changedModel = 0;
-    private boolean interactionDisabled = false;
+    private boolean interactionDisabled = true;
     private static final Map<String, Image> imageCache = new HashMap<>();
 
     public NodeView(final GameNode node, String selectedColor) {
