@@ -1,8 +1,10 @@
 package UI;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import logic.Game;
 import logic.GameNode;
@@ -11,28 +13,52 @@ import logic.Position;
 public class InfoPanel {
     private final Stage stage;
     private final Label[][] labels;
+    private final NodeView[][] nodeViews;
 
+    public InfoPanel(Game game, String selectedColor) {
+        game.addObserver(o -> refresh(game));
 
-    public InfoPanel(Game game) {
         int rows = game.rows();
         int cols = game.cols();
 
         labels = new Label[rows][cols];
+        nodeViews = new NodeView[rows][cols];
+
         GridPane gridPane = new GridPane();
+        gridPane.setPadding(new Insets(20));
+        gridPane.setHgap(5);
+        gridPane.setVgap(5);
+        gridPane.setStyle("-fx-background-color: black;");
 
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
                 GameNode node = game.node(new Position(r + 1, c + 1));
 
-                Label label = new Label(formatLabelText(node));
-                labels[r][c] = label;
-                gridPane.add(label, c, r);
+                NodeView nodeView = new NodeView(node, selectedColor);
+                nodeView.setDisable(true);
+                nodeView.setPrefSize(50, 50);
+                nodeView.setStyle("-fx-border-color: white; -fx-background-color: gray;");
+                nodeView.update(node);
+
+                nodeViews[r][c] = nodeView;
+
+                Label infoLabel = new Label(formatLabelText(node));
+                infoLabel.setStyle("-fx-font-size: 10px; -fx-text-fill: white;");
+
+                labels[r][c] = infoLabel;
+
+                VBox cell = new VBox(2, nodeView, infoLabel);
+                cell.setAlignment(Pos.CENTER);
+                cell.setPadding(new Insets(2));
+                VBox.setVgrow(nodeView, Priority.NEVER);
+
+                gridPane.add(cell, c, r);
             }
         }
 
         Scene scene = new Scene(gridPane);
         stage = new Stage();
-        stage.setTitle("Game Info Panel");
+        stage.setTitle("Info Panel");
         stage.setScene(scene);
     }
 
@@ -52,6 +78,7 @@ public class InfoPanel {
         for (int r = 1; r <= game.rows(); r++) {
             for (int c = 1; c <= game.cols(); c++) {
                 GameNode node = game.node(new Position(r, c));
+                nodeViews[r - 1][c - 1].update(node);
                 labels[r - 1][c - 1].setText(formatLabelText(node));
             }
         }
@@ -59,6 +86,6 @@ public class InfoPanel {
 
     private String formatLabelText(GameNode node) {
         return "Need: " + node.turnsRemainingToCorrectRotation() +
-                "\nTurns: " + node.getUserRotatedCounter();
+            "\nTurns: " + node.getUserRotatedCounter();
     }
 }

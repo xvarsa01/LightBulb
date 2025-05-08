@@ -58,10 +58,10 @@ public class GamePage {
         setupGameObserver(rows);
         generateValidMap(rows);
 
-        infoPanel = new InfoPanel(game);
+        String selectedColor = getRandomColor();
+        infoPanel = new InfoPanel(game, selectedColor);
 
         game.init();
-        String selectedColor = getRandomColor();
 
         GridPane gridPane = createGameGrid(rows, selectedColor);
         StackPane stackPane = setupGameStack(gridPane);
@@ -127,9 +127,7 @@ public class GamePage {
                 GameNode node = game.node(pos);
                 NodeView nodeView = new NodeView(node, color);
 
-                nodeView.setOnMouseClicked(e -> {
-                    handleMouseClick(nodeView, node);
-                });
+                nodeView.setOnMouseClicked(e -> handleMouseClick(nodeView, node));
 
                 nodeViews[row - 1][col - 1] = nodeView;
                 gridPane.add(nodeView, col - 1, row - 1);
