@@ -11,12 +11,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import logic.Game;
-import logic.Randomizer;
 import logic.Score;
 
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Navigation {
 
@@ -102,50 +99,11 @@ public class Navigation {
         Game game = gamePage.show();
 
         gamePage.setBoardInteractionDisabled(true);
+        gamePage.startCountdownAndRandomize(game, difficulty);
 
         new Thread(() -> {
             gamePage.setBoardInteractionDisabled(false);
-            WaitAndTurnNodes(game, difficulty);
             Platform.runLater(gamePage::startTimer);
         }).start();
-    }
-
-    private static void WaitAndTurnNodes(Game game, Difficulty difficulty) {
-        System.out.println("3 !");
-        sleep(1000);
-        System.out.println("2 !");
-        sleep(1000);
-        System.out.println("1 !");
-        sleep(1000);
-
-        int affectedNodesPercentage, rotatedNodesAtSameTime;
-
-        switch (difficulty) {
-            case medium -> {
-                affectedNodesPercentage = 90;
-                rotatedNodesAtSameTime = 2;
-            }
-            case hard -> {
-                affectedNodesPercentage = 100;
-                rotatedNodesAtSameTime = 3;
-            }
-            default -> {
-                affectedNodesPercentage = 80;
-                rotatedNodesAtSameTime = 1;
-            }
-        }
-
-        //todo add some time to rotate
-        Randomizer randomizer = new Randomizer(game);
-        randomizer.randomlyTurnSomeNodes(affectedNodesPercentage / 100f, 0, rotatedNodesAtSameTime);
-        System.out.println("Go !");
-    }
-
-    private static void sleep(int ms) {
-        try {
-            Thread.sleep(ms);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 }

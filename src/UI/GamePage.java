@@ -32,11 +32,14 @@ public class GamePage {
     private int turnCount;
     private Game game;
 
+    private Label countdownLabel;
     private InfoPanel infoPanel;
     private PausePanel pauseOverlay;
     private WinPanel winOverlay;
 
     private final MoveHistory moveHistory = new MoveHistory();
+
+    private boolean isRandomizing = true;
 
     public GamePage(Stage stage, Difficulty difficulty) {
         this.stage = stage;
@@ -87,7 +90,7 @@ public class GamePage {
                 }
             }
 
-            if (game.GameFinished() && timeline != null) {
+            if (!isRandomizing && game.GameFinished() && timeline != null) {
                 Platform.runLater(this::stopTimer);
                 Score.increment(difficulty);
                 showWinPopup();
@@ -161,6 +164,10 @@ public class GamePage {
         turnLabel = new Label("🔁 Turns: 0");
         turnLabel.setStyle("-fx-text-fill: white;");
 
+        countdownLabel = new Label();
+        countdownLabel.setStyle("-fx-text-fill: white; -fx-font-size: 36px;");
+        countdownLabel.setVisible(false);
+
         HBox buttonRowTop = new HBox(20,
                 timerLabel,
                 turnLabel,
@@ -186,8 +193,7 @@ public class GamePage {
         setupPauseOverlay(); // make sure this sets up a full overlay
         setupWinOverlay();   // make sure this sets up a full overlay
 
-        StackPane stack = new StackPane(mainVBox, pauseOverlay, winOverlay);
-        return stack;
+        return new StackPane(mainVBox, pauseOverlay, winOverlay, countdownLabel);
     }
 
     private void toggleInfoPanel() {
@@ -251,10 +257,25 @@ public class GamePage {
     }
 
     public void startTimer() {
+        if (timeline != null) {
+            timeline.stop();
+        }
+
         elapsedSeconds = 0;
         timerLabel.setText("⏱ Time: 0s");
-        continueTimer();
+
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            if (!isRandomizing){
+                elapsedSeconds++;
+                timerLabel.setText("⏱ Time: " + elapsedSeconds + "s");
+            }
+
+        }));
+
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
     }
+
 
     private void continueTimer(){
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
@@ -316,4 +337,56 @@ public class GamePage {
         return button;
     }
 
+    public void startCountdownAndRandomize(Game game, Difficulty difficulty) {
+        countdownLabel.setVisible(true);
+        int[] count = {3};
+
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            if (count[0] > 0) {
+                countdownLabel.setText(String.valueOf(count[0]));
+                count[0]--;
+            } else if (count[0] == 0) {
+                countdownLabel.setText("Go!");
+                count[0]--;
+            } else {
+                countdownLabel.setVisible(false);
+                runRandomizer(game, difficulty);
+            }
+        }));
+
+        timeline.setCycleCount(count.length + 4); // 3..2..1..Go..(hide)
+        timeline.play();
+    }
+
+    private void runRandomizer(Game game, Difficulty difficulty) {
+        setBoardInteractionDisabled(false);
+
+        int affectedNodesPercentage, rotatedNodesAtSameTime;
+
+        switch (difficulty) {
+            case medium -> {
+                affectedNodesPercentage = 90;
+                rotatedNodesAtSameTime = 2;
+            }
+            case hard -> {
+                affectedNodesPercentage = 100;
+                rotatedNodesAtSameTime = 3;
+            }
+            default -> {
+                affectedNodesPercentage = 80;
+                rotatedNodesAtSameTime = 1;
+            }
+        }
+
+        Randomizer randomizer = new Randomizer(game);
+
+        new Thread(() -> {
+            randomizer.randomlyTurnSomeNodes(affectedNodesPercentage / 100f, 500, rotatedNodesAtSameTime);
+
+            Platform.runLater(() -> {
+                isRandomizing = false;
+                startTimer();
+            });
+        }).start();
+    }
 }
