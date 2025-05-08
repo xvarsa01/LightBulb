@@ -35,7 +35,6 @@ public class GamePage {
     private Game game;
 
     private InfoPanel infoPanel;
-    private StackPane gameLayer;
     private PausePanel pauseOverlay;
 
     private final MoveHistory moveHistory = new MoveHistory();
@@ -58,7 +57,6 @@ public class GamePage {
         generateValidMap(rows);
 
         infoPanel = new InfoPanel(game);
-        infoPanel.show();
 
         game.init();
         String selectedColor = getRandomColor();
@@ -168,6 +166,7 @@ public class GamePage {
         HBox buttonRowTop = new HBox(20,
                 timerLabel,
                 turnLabel,
+                createStyledButton("Hint", "silver", this::toggleInfoPanel),
                 createStyledButton("⏸ Pause", "silver", this::showPauseMenu)
         );
         buttonRowTop.setPadding(new Insets(10));
@@ -192,42 +191,14 @@ public class GamePage {
         return stack;
     }
 
-    private VBox setupVBox(GridPane gridPane) {
-        timerLabel = new Label("⏱ Time: 0s");
-        timerLabel.setStyle("-fx-text-fill: white;");
-
-        turnLabel = new Label("🔁 Turns: 0");
-        turnLabel.setStyle("-fx-text-fill: white;");
-
-        HBox buttonRowTop = new HBox(20,
-                timerLabel,
-                turnLabel,
-                createStyledButton("⏸ Pause", "silver", this::showPauseMenu)
-        );
-
-        HBox buttonRowBottom = new HBox(20,
-                createStyledButton("⬅ Undo", "silver", this::handleUndo),
-                createStyledButton("🏠 Home", "gray", () -> Navigation.showHomePage(stage)),
-                createStyledButton("➡ Redo", "silver", this::handleRedo)
-        );
-
-        buttonRowBottom.setPadding(new Insets(10));
-        buttonRowBottom.setStyle("-fx-alignment: center;");
-        buttonRowTop.setPadding(new Insets(10));
-        buttonRowTop.setStyle("-fx-alignment: center;");
-
-        gameLayer = new StackPane(gridPane);
-        gameLayer.setStyle("-fx-alignment: center;");
-
-        setupPauseOverlay();
-
-        StackPane layeredPane = new StackPane(gameLayer, pauseOverlay);
-
-        VBox vbox = new VBox(10, buttonRowTop, layeredPane, buttonRowBottom);
-        vbox.setPadding(new Insets(20));
-        vbox.setStyle("-fx-alignment: center;");
-
-        return vbox;
+    private void toggleInfoPanel() {
+        if (infoPanel != null) {
+            if (infoPanel.isVisible()) {
+                infoPanel.hide();
+            } else {
+                infoPanel.show();
+            }
+        }
     }
 
     private void setupPauseOverlay() {

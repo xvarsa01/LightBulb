@@ -36,6 +36,9 @@ public class InfoPanel {
         stage.setScene(scene);
     }
 
+    public boolean isVisible() {
+        return stage.isShowing();
+    }
 
     public void show() {
         stage.show();
