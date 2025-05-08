@@ -22,14 +22,14 @@ public class WinPanel extends StackPane {
 
         Label winLabel = new Label("🎉 YOU WIN 🎉");
         winLabel.setFont(Font.font(36));
-        winLabel.setTextFill(Color.WHITE);
+        winLabel.setTextFill(Color.BLACK);
 
         Button playAgain = GamePage.createStyledButton("▶ Play Again", "green", onPlayAgain);
         Button goHome = GamePage.createStyledButton("🏠 Home", "red", onHome);
 
         VBox panel = new VBox(20, winLabel, playAgain, goHome);
         panel.setAlignment(Pos.CENTER);
-        panel.setStyle("-fx-background-color: rgba(255, 255, 255, 0.85); -fx-padding: 40px; -fx-background-radius: 15;");
+        panel.setStyle("-fx-background-color: rgba(255, 255, 255, 0.85); -fx-padding: 40px;");
 
         getChildren().addAll(overlay, panel);
         setVisible(false);
