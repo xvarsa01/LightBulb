@@ -3,8 +3,6 @@ package UI;
 import javafx.scene.layout.*;
 import logger.GameLogger;
 import enums.Difficulty;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import logger.MoveHistory;
 import logger.MoveRecord;
 import logic.*;
@@ -36,6 +34,7 @@ public class GamePage {
 
     private InfoPanel infoPanel;
     private PausePanel pauseOverlay;
+    private WinPanel winOverlay;
 
     private final MoveHistory moveHistory = new MoveHistory();
 
@@ -67,7 +66,6 @@ public class GamePage {
         BorderPane root = new BorderPane();
         setBackgroundImage(root);
         root.setCenter(stackPane);
-        root.setTop(new Label("🎮 Game Page"));
 
         stage.setScene(new Scene(root));
         stage.show();
@@ -186,8 +184,9 @@ public class GamePage {
         mainVBox.setMouseTransparent(false); // Important
 
         setupPauseOverlay(); // make sure this sets up a full overlay
+        setupWinOverlay();   // make sure this sets up a full overlay
 
-        StackPane stack = new StackPane(mainVBox, pauseOverlay);
+        StackPane stack = new StackPane(mainVBox, pauseOverlay, winOverlay);
         return stack;
     }
 
@@ -202,11 +201,20 @@ public class GamePage {
     }
 
     private void setupPauseOverlay() {
-        pauseOverlay = new PausePanel(this::hidePauseMenu, () -> {
-            stopTimer();
-            if (infoPanel != null) infoPanel.hide();
-            Navigation.showHomePage(stage);
-        });
+        pauseOverlay = new PausePanel(
+            this::hidePauseMenu,
+            () -> {
+                stopTimer();
+                Navigation.showHomePage(stage);
+            }
+        );
+    }
+
+    private void setupWinOverlay() {
+        winOverlay = new WinPanel(
+                () -> Navigation.showGamePage(stage, difficulty),
+                () -> Navigation.showHomePage(stage)
+        );
     }
 
     private void setBackgroundImage(BorderPane root) {
@@ -231,6 +239,7 @@ public class GamePage {
 
     private void showPauseMenu() {
         pauseOverlay.setVisible(true);
+        if (infoPanel != null) infoPanel.hide();
         disableBoardInteractionAndButtons(true);
         stopTimer();
     }
@@ -268,23 +277,11 @@ public class GamePage {
     }
 
     private void showWinPopup() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Yeah!");
-        alert.setHeaderText("🎉 YOU WIN 🎉");
-        alert.setContentText("Play next game?");
+        stopTimer();
+        if (infoPanel != null) infoPanel.hide();
+        setBoardInteractionDisabled(true);
 
-        ButtonType yesButton = new ButtonType("Yes");
-        ButtonType noButton = new ButtonType("No");
-        alert.getButtonTypes().setAll(yesButton, noButton);
-
-        alert.showAndWait().ifPresent(response -> {
-            infoPanel.hide();
-            if (response == yesButton) {
-                Navigation.showGamePage(stage, difficulty);
-            } else {
-                Navigation.showHomePage(stage);
-            }
-        });
+        winOverlay.setVisible(true);
     }
 
     private void handleUndo() {
