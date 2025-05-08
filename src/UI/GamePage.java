@@ -63,8 +63,6 @@ public class GamePage {
         game.init();
         String selectedColor = getRandomColor();
 
-
-
         GridPane gridPane = createGameGrid(rows, selectedColor);
         StackPane stackPane = setupGameStack(gridPane);
 
@@ -92,7 +90,7 @@ public class GamePage {
                 }
             }
 
-            if (!isRandomizing && game.GameFinished() && timeline != null) {
+            if (!isRandomizing && game.GameFinished()) {
                 Platform.runLater(this::stopTimer);
                 Score.increment(difficulty);
                 showWinPopup();
@@ -142,7 +140,7 @@ public class GamePage {
 
     private void handleMouseClick(NodeView nodeView, GameNode node) {
         if (nodeView.isInteractionDisabled()) {
-            System.err.print("Interaction is disabled");
+            System.err.println("Interaction is disabled");
             return;
         }
         moveHistory.addMove(new MoveRecord(
@@ -161,6 +159,8 @@ public class GamePage {
     }
 
     private StackPane setupGameStack(GridPane gridPane) {
+        gridPane.setStyle("-fx-alignment: center;");
+
         timerLabel = new Label("⏱ Time: 0s");
         timerLabel.setStyle("-fx-text-fill: white;");
 
@@ -182,7 +182,12 @@ public class GamePage {
 
         HBox buttonRowBottom = new HBox(20,
                 createStyledButton("⬅ Undo", "silver", this::handleUndo),
-                createStyledButton("🏠 Home", "gray", () -> Navigation.showHomePage(stage)),
+                createStyledButton("🏠 Home", "gray", () -> {
+                    Navigation.showHomePage(stage);
+                    if(infoPanel != null) {
+                        infoPanel.hide();
+                    }
+                }),
                 createStyledButton("➡ Redo", "silver", this::handleRedo)
         );
         buttonRowBottom.setPadding(new Insets(10));
@@ -251,7 +256,9 @@ public class GamePage {
     private void hidePauseMenu() {
         pauseOverlay.setVisible(false);
         setBoardInteractionDisabled(false);
-        continueTimer();
+        if(timeline.getStatus() != Timeline.Status.RUNNING) {
+            continueTimer();
+        }
     }
 
     public void startTimer() {
@@ -260,14 +267,10 @@ public class GamePage {
         }
 
         elapsedSeconds = 0;
-        timerLabel.setText("⏱ Time: 0s");
 
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            if (!isRandomizing){
                 elapsedSeconds++;
                 timerLabel.setText("⏱ Time: " + elapsedSeconds + "s");
-            }
-
         }));
 
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -339,7 +342,7 @@ public class GamePage {
         countdownLabel.setVisible(true);
         int[] count = {3};
 
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+        Timeline countdown = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             if (count[0] > 0) {
                 countdownLabel.setText(String.valueOf(count[0]));
                 count[0]--;
@@ -352,8 +355,8 @@ public class GamePage {
             }
         }));
 
-        timeline.setCycleCount(count.length + 4); // 3..2..1..Go..(hide)
-        timeline.play();
+        countdown.setCycleCount(count.length + 4); // 3..2..1..Go..(hide)
+        countdown.play();
     }
 
     private void runRandomizer(Game game, Difficulty difficulty) {

@@ -32,6 +32,5 @@ public class PausePanel extends VBox {
         setMouseTransparent(false);
         setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
-
     }
 }

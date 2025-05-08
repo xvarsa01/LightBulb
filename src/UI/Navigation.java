@@ -100,9 +100,5 @@ public class Navigation {
 
         gamePage.setBoardInteractionDisabled(true);
         gamePage.startCountdownAndRandomize(game, difficulty);
-
-        new Thread(() -> {
-            Platform.runLater(gamePage::startTimer);
-        }).start();
     }
 }
