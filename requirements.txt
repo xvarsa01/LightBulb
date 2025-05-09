@@ -182,18 +182,3 @@ Priorita: 3
 Poziadavok: Pri nacitani ulozenej hry sa musi aktualizovat informacne okno.
 Vlastnik: vsetci
 Termin: 7.5.2025
-
-Priorita: 2
-Poziadavok: Uzivatel musi byt informovany o vitazstve vizualne aj textovo.
-Vlastnik: Adam H.
-Termin: 8.5.2025
-
-Priorita: 2
-Poziadavok: System by mohol zobrazit pocet zlych otoceni pocas hry.
-Vlastnik: Adam V.
-Termin: 9.5.2025
-
-Priorita: 1
-Poziadavok: System by mal obsahovat zvukovy efekt pri otoceni policka.
-Vlastnik: Adam H.
-Termin: 9.5.2025
