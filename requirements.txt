@@ -138,12 +138,12 @@ Poziadavok: Policka musia byt interaktivne a vizualne reagovat na kliknutia.
 Vlastnik: Vsetci.
 Termin: 25.04.2025
 
-Priorita: 2
+Priorita: 5
 Poziadavok: Hra musi podporovat aspon dve preddefinovane mapy.
 Vlastnik: Adam V.
 Termin: 24.04.2025
 
-Priorita: 2
+Priorita: 5
 Poziadavok: Uzivatel bude informovany o vitazstve.
 Vlastnik: Adam H.
 Termin: 28.04.2025
