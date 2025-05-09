@@ -1,184 +1,149 @@
 Priorita: 5
-Poziadavok: System musi vygenerovat platne zapojenie obsahujuce vsetky definovane prvky a ich typy.
+Poziadavok: Kazde policko na doske musi obsahovat bud vodic, zdroj, ziarovku alebo byt prazdne.
 Vlastnik: Adam V.
-Termin: 1.4.2025
+Termin: 22.04.2025
 
 Priorita: 5
-Poziadavok: Kazde policko musi obsahovat bud prazdny priestor, alebo definovany prvok (vodic, zdroj, ziarovka).
+Poziadavok: Zdroj musi byt jeden a nesmie smerovat mimo hracej dosky.
 Vlastnik: Adam V.
-Termin: 2.4.2025
+Termin: 23.04.2025
 
 Priorita: 5
-Poziadavok: Vodic nemoze smerovat mimo hracej dosky v spravnom zapojeni.
+Poziadavok: Kazda ziarovka musi mat len jeden privod.
 Vlastnik: Adam V.
-Termin: 3.4.2025
-
-Priorita: 5
-Poziadavok: Zdroj energie musi byt pripojeny k vodicom a byt prave jeden v hre.
-Vlastnik: Adam V.
-Termin: 4.4.2025
-
-Priorita: 5
-Poziadavok: Kazda ziarovka musi mat presne jeden privod.
-Vlastnik: Adam V.
-Termin: 5.4.2025
+Termin: 23.04.2025
 
 Priorita: 4
-Poziadavok: Hra musi po vygenerovani nahodne otocit policka tak, aby ziadna ziarovka nesvietila.
+Poziadavok: Po vygenerovani sa policka nahodne otocia tak, aby ziadna ziarovka nesvietila.
 Vlastnik: Adam V.
-Termin: 6.4.2025
+Termin: 24.04.2025
 
 Priorita: 4
-Poziadavok: Hra musi obsahovat moznost volby obtiaznosti.
-Vlastnik: vsetci
-Termin: 7.4.2025
+Poziadavok: Uzivatel nemoze pocas nacitavania mapy interagovat s hracou doskou.
+Vlastnik: Adam H.
+Termin: 24.04.2025
+
+Priorita: 4
+Poziadavok: Hracia doska sa musi graficky zobrazit s MxN polickami.
+Vlastnik: vsetci.
+Termin: 24.04.2025
+
+Priorita: 4
+Poziadavok: Policka musia reagovat na kliknutie otocenim o 90 stupnov doprava.
+Vlastnik: Adam H.
+Termin: 25.04.2025
 
 Priorita: 3
-Poziadavok: Rozmer hracej plochy a pocet ziaroviek sa musi menit podla obtiaznosti.
-Vlastnik: Adam V.
-Termin: 8.4.2025
+Poziadavok: Po kliknuti sa musi aktualizovat stav policka FE + BE.
+Vlastnik: vsetci.
+Termin: 25.04.2025
 
-Priorita: 2
-Poziadavok: Hra musi podporovat minimalne dve preddefinovane mapy.
+Priorita: 4
+Poziadavok: Treba vizualne rozlisit pripojene a nepripojene policka ku zdroju.
+Vlastnik: Adam H.
+Termin: 26.04.2025
+
+Priorita: 4
+Poziadavok: Uzivatel si moze na uvodnej stranke vybrat obtiaznost hry.
+Vlastnik: Adam H.
+Termin: 26.04.2025
+
+Priorita: 3
+Poziadavok: Obtiaznost ovplyvni velkost dosky a pocet ziaroviek.
 Vlastnik: Adam V.
-Termin: 9.4.2025
+Termin: 27.04.2025
+
+Priorita: 3
+Poziadavok: Hra musi zobrazovat pocet tahov pocas hrania.
+Vlastnik: Adam H.
+Termin: 27.04.2025
+
+Priorita: 3
+Poziadavok: Hra musi zobrazovat cas od zaciatku hry.
+Vlastnik: Adam H.
+Termin: 27.04.2025
+
+Priorita: 3
+Poziadavok: Uzivatel moze hru pauznut a neskor pokracovat.
+Vlastnik: vsetci.
+Termin: 28.04.2025
+
+Priorita: 4
+Poziadavok: Po vyrieseni zapojenia sa zobrazi vitazne okno.
+Vlastnik: vsetci.
+Termin: 28.04.2025
+
+Priorita: 3
+Poziadavok: Vitazne okno ponukne moznost spustit novu hru presne ako predloha.
+Vlastnik: Adam H.
+Termin: 29.04.2025
+
+Priorita: 3
+Poziadavok: Vitazne okno ponukne moznost vratit sa na uvodnu obrazovku.
+Vlastnik: Adam H.
+Termin: 29.04.2025
+
+Priorita: 4
+Poziadavok: Uzivatel si moze otvorit informacne okno s napovedou o pocte potrebnych otoceni.
+Vlastnik: Adam H.
+Termin: 29.04.2025
+
+Priorita: 4
+Poziadavok: Informacne okno sa musi aktualizovat po kazdom tahu.
+Vlastnik: Adam V.
+Termin: 30.04.2025
+
+Priorita: 3
+Poziadavok: Uzivatel musi mat moznost vidiet skutocne a potrebne otocenia pre kazde policko.
+Vlastnik: vsetci.
+Termin: 30.04.2025
+
+Priorita: 4
+Poziadavok: Informacne okno nesmie umoznit interakciu, je len na citanie.
+Vlastnik: Adam H.
+Termin: 30.04.2025
 
 Priorita: 4
 Poziadavok: Hra musi automaticky logovat priebeh hry do suboru.
 Vlastnik: Adam V.
-Termin: 10.4.2025
+Termin: 01.05.2025
 
 Priorita: 4
 Poziadavok: Uzivatel musi mat moznost nacitat hru zo suboru.
 Vlastnik: Adam V.
-Termin: 11.4.2025
+Termin: 01.05.2025
 
 Priorita: 4
-Poziadavok: Uzivatel musi mat moznost krokovat hru dopredu a dozadu.
+Poziadavok: Uzivatel bude mat moznost krokovat ulozenu hru dopredu aj dozadu.
 Vlastnik: Adam V.
-Termin: 12.4.2025
-
-Priorita: 3
-Poziadavok: Po prepnuti do aktivneho hrania uz nemoze uzivatel krokovat povodnu hru.
-Vlastnik: Adam V.
-Termin: 13.4.2025
-
-Priorita: 1
-Poziadavok: System by mohol obsahovat moznost nastavit casovy limit.
-Vlastnik: Adam V.
-Termin: 14.4.2025
-
-Priorita: 1
-Poziadavok: System by mohol obsahovat moznost nastavit velkost hracej dosky manualne.
-Vlastnik: Adam V.
-Termin: 15.4.2025
-
-Priorita: 5
-Poziadavok: System musi zobrazit hraciu dosku s MxN polickami.
-Vlastnik: Adam H.
-Termin: 16.4.2025
-
-Priorita: 4
-Poziadavok: Uzivatel musi vidiet barevne rozlisene policka podla toho ci su pripojene ku zdroju alebo nie.
-Vlastnik: Adam H.
-Termin: 17.4.2025
-
-Priorita: 4
-Poziadavok: Uzivatel musi byt schopny kliknutim otocit policko o 90 stupnov doprava.
-Vlastnik: Adam H.
-Termin: 18.4.2025
-
-Priorita: 3
-Poziadavok: Policka musia byt interaktivne a reagovat na kliknutia mysi.
-Vlastnik: Adam H.
-Termin: 19.4.2025
-
-Priorita: 4
-Poziadavok: Uzivatel nemoze interagovat s hracou plochou pocas nacitavania hry.
-Vlastnik: Adam H.
-Termin: 20.4.2025
-
-Priorita: 3
-Poziadavok: System musi obsahovat domovsku obrazovku s vyberom obtiaznosti.
-Vlastnik: Adam H.
-Termin: 21.4.2025
-
-Priorita: 3
-Poziadavok: System musi zobrazit uvodny popis a instrukcie.
-Vlastnik: Adam H.
-Termin: 22.4.2025
-
-Priorita: 3
-Poziadavok: System musi zobrazit pocet tahov pocas hry.
-Vlastnik: Adam H.
-Termin: 23.4.2025
-
-Priorita: 3
-Poziadavok: System musi zobrazit cas uplynuty od zaciatku hry.
-Vlastnik: Adam H.
-Termin: 24.4.2025
-
-Priorita: 3
-Poziadavok: Uzivatel musi mat moznost hru pozastavit a neskor pokracovat.
-Vlastnik: Adam H.
-Termin: 25.4.2025
-
-Priorita: 3
-Poziadavok: Po pozastaveni sa hra obnovi v rovnakom stave.
-Vlastnik: Adam V.
-Termin: 26.4.2025
-
-Priorita: 4
-Poziadavok: Po vyrieseni zapojenia sa musi zobrazit vitazne okno.
-Vlastnik: Adam H.
-Termin: 27.4.2025
-
-Priorita: 3
-Poziadavok: System musi ponuknut moznost hrat novu hru po vyhre.
-Vlastnik: Adam H.
-Termin: 28.4.2025
-
-Priorita: 3
-Poziadavok: System musi ponuknut moznost vratit sa na uvodnu obrazovku po vyhre.
-Vlastnik: Adam H.
-Termin: 29.4.2025
+Termin: 02.05.2025
 
 Priorita: 2
-Poziadavok: Uzivatel chce mat moznost resetovat svoje skore.
+Poziadavok: Uzivatel si moze resetovat svoje skore.
 Vlastnik: Adam H.
-Termin: 30.4.2025
+Termin: 03.05.2025
 
 Priorita: 2
-Poziadavok: System musi zobrazit aktualne skore pre kazdu obtiaznost.
+Poziadavok: System zobrazi aktualne skore pre kazdu obtiaznost.
 Vlastnik: Adam H.
-Termin: 1.5.2025
+Termin: 03.05.2025
 
 Priorita: 2
-Poziadavok: Uzivatel chce mat nahodne farebne motivy ikon pri kazdej hre.
-Vlastnik: Adam H.
-Termin: 2.5.2025
-
-Priorita: 4
-Poziadavok: Uzivatel si moze zobrazit informacne okno s poctom otoceni do spravnej polohy.
-Vlastnik: Adam H.
-Termin: 3.5.2025
-
-Priorita: 4
-Poziadavok: Informacne okno musi zobrazovat aktualizovane data po kazdom tahu.
-Vlastnik: vsetci
-Termin: 4.5.2025
-
-Priorita: 4
-Poziadavok: Informacne okno nesmie umoznit hranie - je len informativne.
-Vlastnik: Adam H.
-Termin: 5.5.2025
+Poziadavok: Hra nahodne vyberie farebny styl ikon pre kazdu novu hru.
+Vlastnik: Adam V.
+Termin: 03.05.2025
 
 Priorita: 3
-Poziadavok: Uzivatel musi mat moznost zobrazit pocet potrebnych a skutocnych otoceni na kazdom policku.
-Vlastnik: Adam H.
-Termin: 6.5.2025
+Poziadavok: Policka musia byt interaktivne a vizualne reagovat na kliknutia.
+Vlastnik: Vsetci.
+Termin: 25.04.2025
 
-Priorita: 3
-Poziadavok: Pri nacitani ulozenej hry sa musi aktualizovat informacne okno.
-Vlastnik: vsetci
-Termin: 7.5.2025
+Priorita: 2
+Poziadavok: Hra musi podporovat aspon dve preddefinovane mapy.
+Vlastnik: Adam V.
+Termin: 24.04.2025
+
+Priorita: 2
+Poziadavok: Uzivatel bude informovany o vitazstve.
+Vlastnik: Adam H.
+Termin: 28.04.2025
