@@ -10,6 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import logger.GameLogger;
 import logic.Game;
 import logic.Score;
 
@@ -95,9 +96,10 @@ public class Navigation {
     }
 
     public static void showGamePage(Stage stage, Difficulty difficulty) {
+        GameLogger.startNewSession();
+
         GamePage gamePage = new GamePage(stage, difficulty);
         Game game = gamePage.show();
-
         gamePage.setBoardInteractionDisabled(true);
         gamePage.startCountdownAndRandomize(game, difficulty);
     }
