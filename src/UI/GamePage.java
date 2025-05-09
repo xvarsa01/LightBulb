@@ -76,7 +76,9 @@ public class GamePage {
     }
 
     private static String getRandomColor() {
-        String[] colors = {"azure", "brown", "darkBlue", "darkRed", "green", "lime", "pink", "purple", "yellow"};
+        //todo
+//        String[] colors = {"azure", "brown", "darkBlue", "darkRed", "green", "lime", "pink", "purple", "yellow"};
+        String[] colors = {"lime"};
         return colors[new Random().nextInt(colors.length)];
     }
 
