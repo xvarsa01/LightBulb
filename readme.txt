@@ -61,13 +61,25 @@ pom.xml      konfigurácia Maven
 
 Spustenie:
 ----------
-1. Preklad:
-   V koreňovom adresári spustiť príkaz:
+Spustenie:
+1. Preklad a vytvorenie .jar archívu:
    mvn clean package
 
-2. Spustenie:
-   Po preklade spustiť súbor:
+   Výstupný súbor:
+   target/lightbulb-game.jar
+
+2. Spustenie aplikácie:
    java -jar target/lightbulb-game.jar
+
+3. Spustenie pomocou Maven (ak máš podporu JavaFX pluginu):
+   mvn javafx:run
+
+4. Generovanie Javadoc dokumentácie:
+   mvn javadoc:javadoc
+
+   Výstupná dokumentácia sa nachádza v:
+   target/site/apidocs/index.html
+
 
 Poznámky:
 ---------
