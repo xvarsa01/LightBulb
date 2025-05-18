@@ -1,3 +1,10 @@
+/**
+ * Authors: xvarsa01, xhavli59
+ * Date: 09.05.2025
+ *
+ * Description: Generates game maps of nodes for different difficulties.
+ */
+
 package logic;
 
 import enums.Side;
@@ -57,7 +64,7 @@ public class MapGenerator {
 
     private List<Position> getNeighbors(Position pos, int rows, int cols) {
         List<Position> neighbors = new ArrayList<>();
-        int r = pos.getRow(), c = pos.getCol();
+        int r = pos.row(), c = pos.col();
 
         if (r > 1) neighbors.add(new Position(r - 1, c));
         if (r < rows) neighbors.add(new Position(r + 1, c));
@@ -71,8 +78,8 @@ public class MapGenerator {
         GameNode nodeA = game.node(a);
         GameNode nodeB = game.node(b);
 
-        if (a.getRow() == b.getRow()) {
-            if (a.getCol() < b.getCol()) {
+        if (a.row() == b.row()) {
+            if (a.col() < b.col()) {
                 nodeA.setSide(Side.EAST);
                 nodeB.setSide(Side.WEST);
             } else {
@@ -80,7 +87,7 @@ public class MapGenerator {
                 nodeB.setSide(Side.EAST);
             }
         } else {
-            if (a.getRow() < b.getRow()) {
+            if (a.row() < b.row()) {
                 nodeA.setSide(Side.SOUTH);
                 nodeB.setSide(Side.NORTH);
             } else {

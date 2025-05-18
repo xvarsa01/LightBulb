@@ -1,3 +1,10 @@
+/**
+ * Authors: xvarsa01, xhavli59
+ * Date: 09.05.2025
+ *
+ * Description: Loads and applies game logs for replay or debugging.
+ */
+
 package logger;
 
 import enums.NodeType;
@@ -8,7 +15,6 @@ import logic.Position;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class LogLoader {
     public static MoveHistory loadLogFile(Game game, String filePath) throws IOException {
@@ -52,7 +58,7 @@ public class LogLoader {
     }
 
     public static void applyMove(Game game, MoveRecord move) {
-        GameNode node = game.node(move.position);
+        GameNode node = game.node(move.position());
 
         // Reset rotation to 0
         while (node.getActualRotation() != 0) {
@@ -60,11 +66,11 @@ public class LogLoader {
         }
 
         // Rotate node to recorded rotation
-        for (int i = 0; i < move.previousRotation; i++) {
+        for (int i = 0; i < move.previousRotation(); i++) {
             node.turn(false);
         }
 
         // Update lighting
-        node.setOnLighted(move.wasLighted);
+        node.setOnLighted(move.wasLighted());
     }
 }

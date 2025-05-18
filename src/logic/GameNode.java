@@ -1,3 +1,10 @@
+/**
+ * Authors: xvarsa01, xhavli59
+ * Date: 09.05.2025
+ *
+ * Description: Represents a node on the game board.
+ */
+
 package logic;
 
 import common.AbstractObservable;
@@ -170,7 +177,7 @@ public class GameNode extends AbstractObservable implements IGameNode {
             case Power -> str += "P";
             case Bulb -> str += "B";
         }
-        str += "[" + position.getRow() + "@" + position.getCol() + "][";
+        str += "[" + position.row() + "@" + position.col() + "][";
         List<String> connectors = new ArrayList<>();
         if (north()) connectors.add("NORTH");
         if (east()) connectors.add("EAST");

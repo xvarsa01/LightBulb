@@ -1,3 +1,10 @@
+/**
+ * Authors: xvarsa01, xhavli59
+ * Date: 09.05.2025
+ *
+ * Description: Main game logic class managing the game state.
+ */
+
 package logic;
 
 import static enums.NodeType.Empty;
@@ -57,7 +64,7 @@ public class Game extends AbstractObservable implements Observable.Observer, IGa
                 node.setOnLighted(false);
             }
         }
-        GameNode PowerNode = Board[PowerNodePosition.getRow()-1][PowerNodePosition.getCol()-1];
+        GameNode PowerNode = Board[PowerNodePosition.row()-1][PowerNodePosition.col()-1];
         ServiceNode(PowerNode);
 
         // will notify UI to rerender
@@ -80,29 +87,29 @@ public class Game extends AbstractObservable implements Observable.Observer, IGa
     }
     private void ServiceNeighbourNodes(GameNode actualNode){
         Position actual = actualNode.position;
-        if (actualNode.north() && actualNode.position.getRow() != 1){
-            Position positionNorth = new Position(actual.getRow()-1, actual.getCol());
+        if (actualNode.north() && actualNode.position.row() != 1){
+            Position positionNorth = new Position(actual.row()-1, actual.col());
             GameNode NodeToService = node(positionNorth);
             if (NodeToService.south()){
                 ServiceNode(NodeToService);
             }
         }
-        if (actualNode.east() && actualNode.position.getCol() != ColSize){
-            Position positionEast = new Position(actual.getRow(), actual.getCol()+1);
+        if (actualNode.east() && actualNode.position.col() != ColSize){
+            Position positionEast = new Position(actual.row(), actual.col()+1);
             GameNode NodeToService = node(positionEast);
             if (NodeToService.west()){
                 ServiceNode(NodeToService);
             }
         }
-        if (actualNode.south() && actualNode.position.getRow() != RowSize){
-            Position positionSouth = new Position(actual.getRow()+1, actual.getCol());
+        if (actualNode.south() && actualNode.position.row() != RowSize){
+            Position positionSouth = new Position(actual.row()+1, actual.col());
             GameNode NodeToService = node(positionSouth);
             if (NodeToService.north()){
                 ServiceNode(NodeToService);
             }
         }
-        if (actualNode.west() && actualNode.position.getCol() != 1){
-            Position positionWest = new Position(actual.getRow(), actual.getCol()-1);
+        if (actualNode.west() && actualNode.position.col() != 1){
+            Position positionWest = new Position(actual.row(), actual.col()-1);
             GameNode NodeToService = node(positionWest);
             if (NodeToService.east()){
                 ServiceNode(NodeToService);
@@ -139,8 +146,8 @@ public class Game extends AbstractObservable implements Observable.Observer, IGa
     public GameNode node(Position p){
         checkIfPositionIsCorrect(p);
 
-        int row = p.getRow() - 1;
-        int col = p.getCol() - 1;
+        int row = p.row() - 1;
+        int col = p.col() - 1;
         return Board[row][col];
     }
 
@@ -156,7 +163,7 @@ public class Game extends AbstractObservable implements Observable.Observer, IGa
         node.setSide(side);
         node.addObserver(this);
 
-        Board[p.getRow()-1][p.getCol()-1] = node;
+        Board[p.row()-1][p.col()-1] = node;
         BulbNodePositions.add(p);
     }
 
@@ -174,7 +181,7 @@ public class Game extends AbstractObservable implements Observable.Observer, IGa
         node.setMultipleSides(sides);
         node.addObserver(this);
 
-        Board[p.getRow()-1][p.getCol()-1] = node;
+        Board[p.row()-1][p.col()-1] = node;
         PowerNodePosition = p;
     }
 
@@ -191,7 +198,7 @@ public class Game extends AbstractObservable implements Observable.Observer, IGa
         node.setMultipleSides(sides);
         node.addObserver(this);
 
-        Board[p.getRow()-1][p.getCol()-1] = node;
+        Board[p.row()-1][p.col()-1] = node;
     }
 
     private void createEmptyNode(Position p){
@@ -199,7 +206,7 @@ public class Game extends AbstractObservable implements Observable.Observer, IGa
         GameNode node =  new GameNode();
         node.nodeType = Empty;
         node.position = p;
-        Board[p.getRow()-1][p.getCol()-1] = node;
+        Board[p.row()-1][p.col()-1] = node;
     }
 
     public void clearMap(){
@@ -215,7 +222,7 @@ public class Game extends AbstractObservable implements Observable.Observer, IGa
     }
 
     private void checkIfPositionIsCorrect(Position p){
-        if(p.getRow() < 1 || p.getRow() > RowSize || p.getCol() < 1 || p.getCol() > ColSize){
+        if(p.row() < 1 || p.row() > RowSize || p.col() < 1 || p.col() > ColSize){
             throw new IndexOutOfBoundsException("Position out of bounds: " + p);
         }
     }

@@ -1,3 +1,10 @@
+/**
+ * Authors: xvarsa01, xhavli59
+ * Date: 09.05.2025
+ *
+ * Description: Main game UI page including game board and controls.
+ */
+
 package UI;
 
 import javafx.scene.layout.*;
@@ -77,8 +84,8 @@ public class GamePage {
 
     private static String getRandomColor() {
         //todo
-//        String[] colors = {"azure", "brown", "darkBlue", "darkRed", "green", "lime", "pink", "purple", "yellow"};
-        String[] colors = {"lime"};
+        String[] colors = {"azure", "brown", "darkBlue", "darkRed", "green", "lime", "pink", "purple", "yellow"};
+//        String[] colors = {"lime"};
         return colors[new Random().nextInt(colors.length)];
     }
 
@@ -309,9 +316,9 @@ public class GamePage {
     private void handleUndo() {
         MoveRecord record = moveHistory.undo();
         if (record != null) {
-            GameNode node = game.node(record.position);
+            GameNode node = game.node(record.position());
             // restore previous rotation
-            while (node.getActualRotation() != record.previousRotation) {
+            while (node.getActualRotation() != record.previousRotation()) {
                 node.turn(false);
             }
         }
@@ -320,7 +327,7 @@ public class GamePage {
     private void handleRedo() {
         MoveRecord record = moveHistory.redo();
         if (record != null) {
-            GameNode node = game.node(record.position);
+            GameNode node = game.node(record.position());
             node.turn(false);
         }
     }

@@ -1,3 +1,10 @@
+/**
+ * Authors: xvarsa01, xhavli59
+ * Date: 09.05.2025
+ *
+ * Description: Stores a history of game moves for replay or undo.
+ */
+
 package logger;
 
 import java.util.ArrayList;
@@ -10,7 +17,7 @@ public class MoveHistory {
     public void addMove(MoveRecord move) {
         // Cut off future moves if we go backward
         while (moves.size() > pointer + 1) {
-            moves.remove(moves.size() - 1);
+            moves.removeLast();
         }
         moves.add(move);
         pointer++;
