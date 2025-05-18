@@ -1,3 +1,10 @@
+/**
+ * Authors: xhavli59
+ * Date: 09.05.2025
+ *
+ * Description: Main entry point of the JavaFX application.
+ */
+
 import UI.Navigation;
 import javafx.application.Application;
 import javafx.stage.Stage;

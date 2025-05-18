@@ -1,3 +1,10 @@
+/**
+ * Authors: xvarsa01, xhavli59
+ * Date: 09.05.2025
+ *
+ * Description: UI panel displayed when the player wins.
+ */
+
 package UI;
 
 import javafx.scene.layout.Region;

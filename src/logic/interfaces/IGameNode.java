@@ -1,3 +1,10 @@
+/**
+ * Authors: xvarsa01, xhavli59
+ * Date: 09.05.2025
+ *
+ * Description: Interface for node behavior in the game.
+ */
+
 package logic.interfaces;
 
 import common.Observable;

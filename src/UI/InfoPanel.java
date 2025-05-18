@@ -1,3 +1,10 @@
+/**
+ * Authors: xvarsa01, xhavli59
+ * Date: 09.05.2025
+ *
+ * Description: Displays game hints and informations.
+ */
+
 package UI;
 
 import javafx.geometry.Insets;

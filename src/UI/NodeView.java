@@ -1,3 +1,10 @@
+/**
+ * Authors: xvarsa01, xhavli59
+ * Date: 09.05.2025
+ *
+ * Description: Visual representation of a node in the UI.
+ */
+
 package UI;
 
 import common.Observable;

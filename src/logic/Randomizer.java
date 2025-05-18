@@ -1,3 +1,10 @@
+/**
+ * Authors: xvarsa01, xhavli59
+ * Date: 09.05.2025
+ *
+ * Description: Handles randomized node rotations or actions.
+ */
+
 package logic;
 
 import javafx.application.Platform;

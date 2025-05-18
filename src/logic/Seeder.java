@@ -1,3 +1,10 @@
+/**
+ * Authors: xvarsa01, xhavli59
+ * Date: 09.05.2025
+ *
+ * Description: Provides predefined seed configurations for the game.
+ */
+
 package logic;
 
 import enums.Difficulty;

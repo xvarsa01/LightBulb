@@ -1,3 +1,10 @@
+/**
+ * Authors: xvarsa01, xhavli59
+ * Date: 09.05.2025
+ *
+ * Description: Base implementation of the Observable interface supporting observer registration.
+ */
+
 package common;
 
 import java.util.HashSet;

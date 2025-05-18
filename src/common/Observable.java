@@ -1,3 +1,10 @@
+/**
+ * Authors: xvarsa01, xhavli59
+ * Date: 09.05.2025
+ *
+ * Description: Defines an interface for observable objects used in the observer pattern.
+ */
+
 package common;
 
 public interface Observable {

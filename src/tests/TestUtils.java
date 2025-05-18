@@ -1,3 +1,10 @@
+/**
+ * Authors: xvarsa01, xhavli59
+ * Date: 09.05.2025
+ *
+ * Description: Utility class supporting test setup and validation.
+ */
+
 package tests;
 
 import logic.Game;
