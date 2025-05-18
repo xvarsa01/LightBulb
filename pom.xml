@@ -121,13 +121,20 @@
                 <version>3.5.0</version>
                 <executions>
                     <execution>
+                        <id>attach-javadocs</id>
                         <phase>package</phase>
                         <goals>
                             <goal>javadoc</goal>
                         </goals>
+                        <configuration>
+                            <sourcepath>src</sourcepath>
+                            <subpackages>.:!tests</subpackages>
+                            <failOnError>false</failOnError>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
+
 
             <!-- Shade Plugin for executable .jar -->
             <plugin>

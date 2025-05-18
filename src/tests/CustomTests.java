@@ -1,4 +1,5 @@
-package tests;/*
+package tests;
+/*
  * Author:  Varsányi Adam, VUT FIT
  * Created: 27/04/2025
  */
@@ -7,13 +8,12 @@ import enums.Difficulty;
 import logic.Game;
 import logic.Randomizer;
 import logic.Seeder;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CustomTests extends TestUtils {
 
@@ -68,7 +68,7 @@ public class CustomTests extends TestUtils {
 
         Randomizer randomizer = new Randomizer(game);
         randomizer.randomlyTurnSomeNodes(100, 0, 1);
-        Assertions.assertFalse(game.GameFinished());
+        assertFalse(game.GameFinished());
     }
 
     private List<Integer[]> CreateArrayOfPositions(){

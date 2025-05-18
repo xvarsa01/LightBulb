@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
- * @author Radek Koci <koci AT fit.vut.cz>
+ * @author Radek Koci (koci AT fit.vut.cz)
  */
 public class GivenTests extends TestUtils{
     /**
