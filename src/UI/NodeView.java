@@ -16,6 +16,10 @@ import javafx.scene.layout.StackPane;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * NodeView is the UI representation of a single {@link GameNode} in the game grid.
+ * It displays the correct image based on node type, rotation, and power/light status.
+ */
 public class NodeView extends StackPane implements Observable.Observer {
 
     private final GameNode node;
@@ -26,6 +30,12 @@ public class NodeView extends StackPane implements Observable.Observer {
     private boolean interactionDisabled = true;
     private static final Map<String, Image> imageCache = new HashMap<>();
 
+    /**
+     * Constructs a NodeView for the given game node using the selected color scheme.
+     *
+     * @param node           the GameNode this view represents
+     * @param selectedColor  the theme color (e.g., "lime", "pink", etc.) for this node
+     */
     public NodeView(final GameNode node, String selectedColor) {
         this.node = node;
         this.selectedColor = selectedColor;
@@ -43,24 +53,39 @@ public class NodeView extends StackPane implements Observable.Observer {
         });
     }
 
+    /**
+     * Enables or disables user interaction (clicking) on this node.
+     *
+     * @param disabled true to disable interaction, false to enable
+     */
     public void setInteractionDisabled(boolean disabled) {
         this.interactionDisabled = disabled;
     }
 
+    /**
+     * Checks whether user interaction is currently disabled.
+     *
+     * @return true if interaction is disabled, false otherwise
+     */
     public boolean isInteractionDisabled() {
         return interactionDisabled;
     }
 
-
+    /**
+     * Called by the game logic when this node changes state.
+     * Increments an internal change counter and refreshes the UI.
+     *
+     * @param observable the observable object triggering the update
+     */
     public void update(Observable observable) {
         changedModel++;
         updateView();
     }
 
-    public int numberUpdates() {
-        return changedModel;
-    }
-
+    /**
+     * Updates the graphical representation of this node based on its type, state,
+     * rotation, and lighting. Uses image caching to improve performance.
+     */
     public void updateView() {
         getChildren().clear();
 

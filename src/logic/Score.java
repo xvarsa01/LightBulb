@@ -71,18 +71,6 @@ public class Score {
         return get(Difficulty.hard);
     }
 
-    public static void incrementEasy() {
-        increment(Difficulty.easy);
-    }
-
-    public static void incrementMedium() {
-        increment(Difficulty.medium);
-    }
-
-    public static void incrementHard() {
-        increment(Difficulty.hard);
-    }
-
     public static void reset() {
         for (Difficulty diff : Difficulty.values()) {
             properties.setProperty(keys.get(diff), "0");

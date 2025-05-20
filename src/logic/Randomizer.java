@@ -57,10 +57,8 @@ public class Randomizer implements IRandomizer
                 nodesAlreadyRotated++;
 
                 if (nodesAlreadyRotated % rotatedNodesAtSameTime == 0) {
-//                    System.out.println("small sleep started");
                     sleep(ms);
                 }
-//                System.out.println("sleep ended");
             }
         }
     }

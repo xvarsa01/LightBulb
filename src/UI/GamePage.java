@@ -27,6 +27,10 @@ import java.io.File;
 
 import java.util.Random;
 
+/**
+ * GamePage handles the rendering and logic for the main game screen.
+ * It manages the game board, UI controls, overlays, and user interactions.
+ */
 public class GamePage {
 
     private final Stage stage;
@@ -48,11 +52,22 @@ public class GamePage {
 
     private boolean isRandomizing = true;
 
+    /**
+     * Constructs a new GamePage with a specific stage and difficulty level.
+     *
+     * @param stage      the JavaFX stage to display the game on
+     * @param difficulty the selected difficulty level
+     */
     public GamePage(Stage stage, Difficulty difficulty) {
         this.stage = stage;
         this.difficulty = difficulty;
     }
 
+    /**
+     * Initializes and displays the game scene.
+     *
+     * @return the initialized Game instance
+     */
     public Game show() {
         int rows = switch (difficulty) {
             case medium -> 6;
@@ -82,6 +97,11 @@ public class GamePage {
         return game;
     }
 
+    /**
+     * Chooses a random color for node highlighting.
+     *
+     * @return the name of a random color
+     */
     private static String getRandomColor() {
         //todo
         String[] colors = {"azure", "brown", "darkBlue", "darkRed", "green", "lime", "pink", "purple", "yellow"};
@@ -89,6 +109,11 @@ public class GamePage {
         return colors[new Random().nextInt(colors.length)];
     }
 
+    /**
+     * Sets up an observer to track game updates and detect game completion.
+     *
+     * @param rows the number of rows in the grid
+     */
     private void setupGameObserver(int rows) {
         game.addObserver(o -> {
             if (nodeViews[0][0] == null) return;
@@ -107,6 +132,11 @@ public class GamePage {
         });
     }
 
+    /**
+     * Generates a valid map with an acceptable number of bulbs based on difficulty.
+     *
+     * @param rows the grid size
+     */
     private void generateValidMap(int rows) {
         MapGenerator generator = new MapGenerator();
         generator.generateMap(game, rows, rows);
@@ -116,6 +146,13 @@ public class GamePage {
         }
     }
 
+    /**
+     * Validates if a generated map has an appropriate bulb count.
+     *
+     * @param game the game instance
+     * @param rows number of rows in the map
+     * @return true if the map is valid, false otherwise
+     */
     private boolean isNiceMap(Game game, int rows) {
         int bulbs = game.bulbNodesCount();
         return switch (rows) {
@@ -126,6 +163,13 @@ public class GamePage {
         };
     }
 
+    /**
+     * Creates the game board grid with interactive node views.
+     *
+     * @param rows  grid size
+     * @param color the node highlight color
+     * @return the constructed GridPane
+     */
     private GridPane createGameGrid(int rows, String color) {
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(20));
@@ -145,6 +189,12 @@ public class GamePage {
         return gridPane;
     }
 
+    /**
+     * Handles mouse click actions on a node view.
+     *
+     * @param nodeView the clicked NodeView
+     * @param node     the associated GameNode
+     */
     private void handleMouseClick(NodeView nodeView, GameNode node) {
         if (nodeView.isInteractionDisabled()) {
             System.err.println("Interaction is disabled");
@@ -165,6 +215,12 @@ public class GamePage {
         GameLogger.log(node.toString());
     }
 
+    /**
+     * Creates and returns the main StackPane containing the UI and overlays.
+     *
+     * @param gridPane the game board grid
+     * @return the main StackPane
+     */
     private StackPane setupGameStack(GridPane gridPane) {
         gridPane.setStyle("-fx-alignment: center;");
 
@@ -211,6 +267,10 @@ public class GamePage {
         return new StackPane(mainVBox, pauseOverlay, winOverlay, countdownLabel);
     }
 
+
+    /**
+     * Toggles the visibility of the InfoPanel.
+     */
     private void toggleInfoPanel() {
         if (infoPanel != null) {
             if (infoPanel.isVisible()) {
@@ -221,6 +281,10 @@ public class GamePage {
         }
     }
 
+
+    /**
+     * Initializes the pause overlay panel.
+     */
     private void setupPauseOverlay() {
         pauseOverlay = new PausePanel(
             this::hidePauseMenu,
@@ -231,6 +295,10 @@ public class GamePage {
         );
     }
 
+
+    /**
+     * Initializes the win overlay panel.
+     */
     private void setupWinOverlay() {
         winOverlay = new WinPanel(
                 () -> Navigation.showGamePage(stage, difficulty),
@@ -238,6 +306,12 @@ public class GamePage {
         );
     }
 
+
+    /**
+     * Sets the background image for the root layout.
+     *
+     * @param root the root layout pane
+     */
     private void setBackgroundImage(BorderPane root) {
         File file = new File("lib/home-background.jpg");
         String localUrl = file.toURI().toString();
@@ -245,6 +319,11 @@ public class GamePage {
                 "-fx-background-size: cover; -fx-background-position: center center;");
     }
 
+    /**
+     * Enables or disables interaction for the entire board.
+     *
+     * @param disabled true to disable, false to enable
+     */
     public void setBoardInteractionDisabled(boolean disabled) {
         for (NodeView[] row : nodeViews) {
             for (NodeView nv : row) {
@@ -253,6 +332,9 @@ public class GamePage {
         }
     }
 
+    /**
+     * Displays the pause overlay and disables the game board.
+     */
     private void showPauseMenu() {
         pauseOverlay.setVisible(true);
         if (infoPanel != null) infoPanel.hide();
@@ -260,6 +342,9 @@ public class GamePage {
         stopTimer();
     }
 
+    /**
+     * Hides the pause overlay and resumes the game.
+     */
     private void hidePauseMenu() {
         pauseOverlay.setVisible(false);
         setBoardInteractionDisabled(false);
@@ -268,6 +353,9 @@ public class GamePage {
         }
     }
 
+    /**
+     * Starts the game timer from zero.
+     */
     public void startTimer() {
         if (timeline != null) {
             timeline.stop();
@@ -284,7 +372,9 @@ public class GamePage {
         timeline.play();
     }
 
-
+    /**
+     * Continues the game timer from the last recorded time.
+     */
     private void continueTimer(){
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             elapsedSeconds++;
@@ -294,17 +384,26 @@ public class GamePage {
         timeline.play();
     }
 
+    /**
+     * Stops the game timer.
+     */
     public void stopTimer() {
         if (timeline != null) {
             timeline.stop();
         }
     }
 
+    /**
+     * Increments the player's turn counter and updates the UI label.
+     */
     public void incrementTurnCount() {
         turnCount++;
         turnLabel.setText("🔁 Turns: " + turnCount);
     }
 
+    /**
+     * Displays the win overlay when the game is completed.
+     */
     private void showWinPopup() {
         stopTimer();
         if (infoPanel != null) infoPanel.hide();
@@ -313,6 +412,9 @@ public class GamePage {
         winOverlay.setVisible(true);
     }
 
+    /**
+     * Handles undo functionality using move history.
+     */
     private void handleUndo() {
         MoveRecord record = moveHistory.undo();
         if (record != null) {
@@ -324,6 +426,9 @@ public class GamePage {
         }
     }
 
+    /**
+     * Handles redo functionality using move history.
+     */
     private void handleRedo() {
         MoveRecord record = moveHistory.redo();
         if (record != null) {
@@ -332,6 +437,14 @@ public class GamePage {
         }
     }
 
+    /**
+     * Creates a styled button with the specified text, color, and action.
+     *
+     * @param text   the button label
+     * @param color  the background color
+     * @param action the action to execute on click
+     * @return the created Button
+     */
     public static Button createStyledButton(String text, String color, Runnable action) {
         Button button = new Button(text);
         String baseStyle = "-fx-font-size: 18px; -fx-background-color: " + color +
@@ -345,6 +458,12 @@ public class GamePage {
         return button;
     }
 
+    /**
+     * Starts a countdown animation and randomizes the game board afterward.
+     *
+     * @param game       the game instance
+     * @param difficulty the game difficulty
+     */
     public void startCountdownAndRandomize(Game game, Difficulty difficulty) {
         countdownLabel.setVisible(true);
         int[] count = {3};
@@ -366,6 +485,12 @@ public class GamePage {
         countdown.play();
     }
 
+    /**
+     * Randomizes the game board by turning a percentage of nodes based on difficulty.
+     *
+     * @param game       the game instance
+     * @param difficulty the game difficulty
+     */
     private void runRandomizer(Game game, Difficulty difficulty) {
 
         int affectedNodesPercentage, rotatedNodesAtSameTime;

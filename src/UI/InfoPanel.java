@@ -22,6 +22,12 @@ public class InfoPanel {
     private final Label[][] labels;
     private final NodeView[][] nodeViews;
 
+    /**
+     * Constructs an InfoPanel window showing a grid of game nodes with extra information.
+     *
+     * @param game           the current game instance
+     * @param selectedColor  the color theme used for NodeViews
+     */
     public InfoPanel(Game game, String selectedColor) {
         game.addObserver(o -> refresh(game));
 
@@ -69,18 +75,35 @@ public class InfoPanel {
         stage.setScene(scene);
     }
 
+    /**
+     * Checks whether the InfoPanel is currently visible on screen.
+     *
+     * @return true if visible, false otherwise
+     */
     public boolean isVisible() {
         return stage.isShowing();
     }
 
+    /**
+     * Displays the InfoPanel window.
+     */
     public void show() {
         stage.show();
     }
 
+
+    /**
+     * Hides the InfoPanel window if currently shown.
+     */
     public void hide() {
         stage.hide();
     }
 
+    /**
+     * Updates all node views and their associated labels with the latest game state.
+     *
+     * @param game the current game instance to retrieve updated node data from
+     */
     public void refresh(Game game) {
         for (int r = 1; r <= game.rows(); r++) {
             for (int c = 1; c <= game.cols(); c++) {
@@ -91,6 +114,13 @@ public class InfoPanel {
         }
     }
 
+
+    /**
+     * Formats the label text showing node rotation info.
+     *
+     * @param node the GameNode to extract information from
+     * @return formatted string showing remaining turns and user's rotation count
+     */
     private String formatLabelText(GameNode node) {
         return "Need: " + node.turnsRemainingToCorrectRotation() +
             "\nTurns: " + node.getUserRotatedCounter();
